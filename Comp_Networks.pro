@@ -15,10 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     models.cpp \
-    controller.cpp
+    controller.cpp \
+    testers.cpp \
+    logics.cpp
 
 HEADERS  += mainwindow.h \
     models.h \
-    controller.h
+    controller.h \
+    logics.h
 
 FORMS    += mainwindow.ui

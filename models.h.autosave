@@ -59,6 +59,8 @@ public:
     void setEnd_pos(int value);
 
     bool initBufferLength(int length);
+    
+    void resetPos();
 
 private:
     int buf_length, start_pos, end_pos;
