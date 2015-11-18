@@ -40,14 +40,7 @@ int main(int argc, char *argv[])
  //   med.setBit();
  //   testJohny::test_run();
 
-    Buffer buffer;
- //   buffer.initBufferLength(10);
- //   buffer.initBufferLength(20);
-
-    std::string str = "hello";
-    buffer.setBuffer("Hello");
-    std::cout<<logics::bufferToMessage(buffer.getBuffer(),buffer.getBuf_length());
-
+  testJohny::test_run();
 
 
   //  return a.exec();

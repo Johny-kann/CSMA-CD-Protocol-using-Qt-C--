@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <string>
 #include <iostream>
+#include "logics.h"
 
 namespace testJohny
 {
@@ -42,39 +43,42 @@ int lengthFinder(T var)
 
 void test_run()
 {
-    unsigned char var = 0xAB;
-    char b = 'b';
-    int a = 600;
-    int tt;
 
-   std::string str;
+    Buffer buffer;
+    //buffer.
 
-    str = "hello";
+    logics::convertMessageToBuffer("kell",buffer);
 
 
-
-//    b = (a >> 0) &0xFF;
-//    tt = (a >> 8);
-//    int test;
-
-  //  qDebug()<<var<<sizeof(var)<<b<<sizeof(b)<<a<<sizeof(a);
-
-  //  for(int i=0;i<7;i++)
-   //     qDebug()<<((var>>i) &1);
-//    qDebug()<<sizeof(str)<<str.size();
-
-    int length = lengthFinder(str);
-    unsigned char *aa = new unsigned char[length];
-
-   // int length =
-    messageToBuffer(str,aa);
-
-    std::string message = bufferToMessage(aa,length);
+    Byte *b = buffer.getBuffer();
 
 
+ //   {'h','e','l'};
 
-       std::cout<<message;
+    Byte tb;
+ //   qDebug()<<sizeof(tb);
+ //   qDebug()<<sizeof(b);
 
+    Bit *bits = logics::convertByteToBits(b,buffer.getBuf_length());
+
+   //  qDebug()<<sizeof(b);
+    for(int i=0;i<buffer.getBuf_length()*8;i++)
+    {
+        if(bits[i])
+            std::cout<<1;
+        else
+            std::cout<<0;
+       // qDebug()<<bits[i];
+    }
+
+    Byte *cBytes = logics::convertBitsToBytes(bits,sizeof(b)*8);
+
+    qDebug()<<"Buffer Length"<<buffer.getBuf_length();
+
+    for(int i=0;i<(buffer.getBuf_length());i++)
+    {
+        qDebug()<<i<<(char)cBytes[i];
+    }
 
 }
 

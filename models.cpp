@@ -58,19 +58,20 @@ int Buffer::getBuf_length() const
 
 void Buffer::setBuf_length(int value)
 {
-    buf_length = value;
+     buf_length = value;
 }
-unsigned char *Buffer::getBuffer() const
+
+Byte *Buffer::getBuffer() const
 {
     return buffer;
 }
 
-unsigned char *Buffer::getBuffer()
+Byte *Buffer::getBuffer()
 {
     return buffer;
 }
 
-void Buffer::setBuffer(unsigned char *value)
+void Buffer::setBuffer(Byte *value)
 {
     if(!(this->buffer == NULL))
            delete[] this->buffer;
@@ -112,7 +113,8 @@ bool Buffer::initBufferLength(int length)
         qDebug()<<"Gonna delete Buffer";
         delete[] this->buffer;
     }
-    this->buffer = new unsigned char[length];
+    this->buffer = new Byte[length];
+    this->setBuf_length(length);
     return true;
 }
 
@@ -124,3 +126,68 @@ void Buffer::resetPos()
 
 
 
+
+short Frame::getSource_length() const
+{
+    return source_length;
+}
+
+void Frame::setSource_length(short value)
+{
+    source_length = value;
+}
+
+short Frame::getDestination_length() const
+{
+    return destination_length;
+}
+
+void Frame::setDestination_length(short value)
+{
+    destination_length = value;
+}
+
+int Frame::getMessage_length() const
+{
+    return message_length;
+}
+
+void Frame::setMessage_length(int value)
+{
+    message_length = value;
+}
+Frame::Frame(Bit *bits, short sour_len, short dest_len, short mess_len)
+{
+    this->bits = bits;
+    this->setSource_length(sour_len);
+    this->setDestination_length(dest_len);
+    this->setMessage_length(mess_len);
+}
+
+Frame::~Frame()
+{
+    if(!(this->bits == NULL))
+    {
+       delete[] this->bits;
+    }
+}
+
+int Frame::getTotalLength()
+{
+    return destination_length + message_length + source_length;
+}
+
+bool *Frame::getSourceBits()
+{
+    return bits+0;
+}
+
+bool *Frame::getDestinationBits()
+{
+    return bits + source_length;
+}
+
+bool *Frame::getMessageBits()
+{
+    return bits + source_length + destination_length;
+}
