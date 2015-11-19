@@ -48,11 +48,14 @@ private:
 
 public:
 
-void listAdd(Frame &frame);
+bool listAdd(Frame &frame);
 
 QList<Frame> &getList();
 QList<Frame> getList() const;
+Frame &frameAt(int i);
 void setList(const QList<Frame> &value);
+void setBufferSize(int size);
+int getBufferSize();
 };
 
 

@@ -5,6 +5,7 @@
 #include "controller.h"
 #include <QTime>
 #include <time.h>
+#include <random>
 
 namespace testJohny
 {
@@ -42,12 +43,22 @@ int lengthFinder(T var)
     return sizeof(var)/8;
 }
 
-void test_run2(control::Controller *a)
+void test_run2(/*control::Controller *a*/)
 {
- //   control::Controller controller(&a);
-    a->startTimer();
-    a->addStations(4);
-   // a->getStationAt(2).setPinStrength(SignalPower::positive);
+    std::default_random_engine generator;
+      std::uniform_int_distribution<int> distribution(0,9);
+
+      int p[10]={};
+
+      int nrolls = 1;
+
+      //for (int i=0; i<nrolls; ++i) {
+        int number = distribution(generator);
+       // ++p[number];
+      //}
+
+     // for(int i=0;i<10;i++)
+          qDebug()<<number;
 
 }
 
@@ -70,23 +81,39 @@ void test_run()
     Byte *cBytes = logics::convertBitsToBytes(bits,24);
     */
 
+    spBuffer buffer;
+    buffer.setBufferSize(10);
+
+    logics::generateRandFrames(10,8,8,40,buffer.getList());
+
+   /* for(int i=0;i<10;i++)
+    {
+
     Bit *bits = new Bit[40];
     logics::generateRandBits(40,bits);
 
-    Frame frame(bits,8,8,24);
 
-    qDebug()<<frame.getDestination()<<frame.getSource()<<frame.getMessage_length();
 
-    Byte *bt=frame.getMessage();
-    std::string string = logics::bufferToMessage(bt,3);
+    Frame *frame = new Frame(bits,8,8,24);
 
-    std::cout<<string;
+    if(!buffer.listAdd(*frame))
+        delete frame;
+
+
+    }
+*/
+
+
+    for(int i=0;i<buffer.getBufferSize();i++)
+     {   qDebug()<<buffer.frameAt(i).getSource()<<buffer.frameAt(i).getDestination();
+   //     std::cout<<logics::bufferToMessage(buffer.frameAt(i).getMessage(),buffer.getBufferSize())<<std::endl;
+    }
 
  //   for(int i=0 ; i<ceil((double)frame.getMessage_length()/8) ; i++)
  //       qDebug()<<bt[i];
 
 
-   delete[] bt;
+
 
   // delete[] bits;
 

@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <time.h>
 #include <QTime>
+#include <random>
 
 bool logics::convertMessageToBuffer(const Message message, Buffer &buffer)
 {
@@ -106,9 +107,13 @@ int logics::generateRand(int lowEnd, int highEnd, int prob)
 {
 
   qsrand(prob);
+//  long int rnd = qrand();
+//  qsrand(rnd);
+ //   qsrand(time(0));
  // qDebug()<<RAND_MAX;
    return ((qrand()
             %(highEnd - lowEnd))+lowEnd);
+
 
 }
 
@@ -117,10 +122,10 @@ bool logics::generateRandBits(int numBits, Bit *bits)
 {
     int num_bytes = ceil((double)numBits/8);
 
-    Byte* bytes = new Byte[num_bytes];
+    Byte *bytes = new Byte[num_bytes];
 
     for(int i=0; i<num_bytes; i++)
-        bytes[i] = (Byte)generateRand(0,255,QTime::currentTime().msec()*time(NULL)*i);
+        bytes[i] = (Byte)generateRand(0,255,QTime::currentTime().msec()*time(NULL)*(i+1));
 
     for(int i=0; i<num_bytes; i++)
     {
@@ -133,5 +138,23 @@ bool logics::generateRandBits(int numBits, Bit *bits)
         }
     }
 
+    delete bytes;
+
+    return true;
+}
+
+
+bool logics::generateRandFrames(int numFrames, int source_length, int dest_length, int message_length, QList<Frame> &frame)
+{
+    for(int i=0;i<numFrames;i++)
+    {
+        int total = source_length + dest_length + message_length;
+        Bit *bits = new Bit[total];
+        logics::generateRandBits(total,bits);
+
+        Frame *tempframe = new Frame(bits,source_length,dest_length,message_length);
+
+        frame.append(*tempframe);
+    }
     return true;
 }

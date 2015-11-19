@@ -23,6 +23,8 @@ int generateRand(int lowEnd,int highEnd,int prob);
 
 bool generateRandBits(int numBits, Bit* bits);
 
+bool generateRandFrames(int numFrames, int source_length, int dest_length, int message_length, QList<Frame> &frame);
+
 }
 #endif // LOGICS
 

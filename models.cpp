@@ -207,10 +207,12 @@ bool *Frame::getMessageBits()
     return bits + source_length + destination_length;
 }
 
-void spBuffer::listAdd(Frame &frame)
+bool spBuffer::listAdd(Frame &frame)
 {
-
-    list.append(frame);
+    if(list.size()<buf_size)
+     {   list.append(frame); return true; }
+    else
+        return false;
 }
 
 QList<Frame> &spBuffer::getList()
@@ -223,9 +225,24 @@ QList<Frame> spBuffer::getList() const
     return list;
 }
 
+Frame &spBuffer::frameAt(int i)
+{
+    return list.operator [](i);
+}
+
 void spBuffer::setList(const QList<Frame> &value)
 {
     list = value;
+}
+
+void spBuffer::setBufferSize(int size)
+{
+    buf_size = size;
+}
+
+int spBuffer::getBufferSize()
+{
+    return this->buf_size;
 }
 
 
