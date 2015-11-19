@@ -191,3 +191,37 @@ bool *Frame::getMessageBits()
 {
     return bits + source_length + destination_length;
 }
+
+void spBuffer::listAdd(Frame &frame)
+{
+
+    list.append(frame);
+}
+
+QList<Frame> &spBuffer::getList()
+{
+    return list;
+}
+
+QList<Frame> spBuffer::getList() const
+{
+    return list;
+}
+
+void spBuffer::setList(const QList<Frame> &value)
+{
+    list = value;
+}
+
+
+Stations::Stations(int id)
+{
+    this->id = id;
+  //  qDebug()<<"Station constructor"<<this->id;
+}
+
+bool Stations::checkChannel()
+{
+    qDebug()<<"Checks Channel"<<this->id;
+    return true;
+}

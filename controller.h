@@ -11,13 +11,27 @@ namespace control
 class Controller : public QObject
 {
     Q_OBJECT
+
+private:
     ChannelMedium med;
+    QList<Stations> stations;
+    QTimer *mainTimer;
+
 public:
     void test();
     Controller(QObject *parent = 0);
+    ~Controller();
+    bool startTimer();
+    bool stopTimer();
+    bool resetTimer();
+    void executeOperations();
+
+    void addStations(int num);
+
 public slots:
     void run();
     void exit();
+    void update();
 
 signals:
     void finished();

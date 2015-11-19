@@ -10,6 +10,12 @@ typedef std::string Message;
 typedef bool Bit;
 typedef unsigned char Byte;
 
+class Frame;
+class spBuffer;
+
+#define CLOCK_TIME 1000
+
+
 class ChannelMedium : public QObject
 {
     Q_OBJECT
@@ -32,12 +38,41 @@ private:
 
 };
 
+class spBuffer
+{
+private:
+    QList<Frame> list;
+    int buf_size;
+
+public:
+
+void listAdd(Frame &frame);
+
+QList<Frame> &getList();
+QList<Frame> getList() const;
+void setList(const QList<Frame> &value);
+};
 
 
-#endif // MODELS_H
+class Stations
+{
+private:
+    ChannelMedium *bus;
+    spBuffer buffer;
+    Frame *frame;
+    int id;
 
-#ifndef SMALLOBJECTS_H
-#define SMALLOBJECTS_H
+public:
+    Stations(int id);
+    bool checkChannel();
+    bool attachChannel(const ChannelMedium *channel);
+
+};
+
+
+//#endif // MODELS_H
+
+
 
 class Buffer
 {
@@ -70,6 +105,8 @@ private:
 
 
 };
+
+
 
 
 class Frame

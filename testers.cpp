@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "logics.h"
+#include "controller.h"
 
 namespace testJohny
 {
@@ -39,9 +40,15 @@ int lengthFinder(T var)
     return sizeof(var)/8;
 }
 
+void test_run2(control::Controller *a)
+{
+ //   control::Controller controller(&a);
+    a->startTimer();
+    a->addStations(4);
 
+}
 
-void test_run()
+void test_run(QApplication &a)
 {
 
     Buffer buffer;
