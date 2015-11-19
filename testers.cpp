@@ -3,6 +3,8 @@
 #include <iostream>
 #include "logics.h"
 #include "controller.h"
+#include <QTime>
+#include <time.h>
 
 namespace testJohny
 {
@@ -49,44 +51,44 @@ void test_run2(control::Controller *a)
 
 }
 
-void test_run(QApplication &a)
+void test_run()
 {
 
-    Buffer buffer;
-    //buffer.
+  //  Byte b[] = {2,3,255,123};
 
-    logics::convertMessageToBuffer("kell",buffer);
+//   qDebug()<<sizeof(tb);
+//   qDebug()<<sizeof(b);
+//    Bit bits2[] = {false,false,true,false,true,false};
+
+ //   Bit *bits = logics::convertByteToBits(b,4);
+
+  /*  for(int i=0;i<8;i++)
+        std::cout<<bits[i];
 
 
-    Byte *b = buffer.getBuffer();
+
+    Byte *cBytes = logics::convertBitsToBytes(bits,24);
+    */
+
+    Bit *bits = new Bit[40];
+    logics::generateRandBits(40,bits);
+
+    Frame frame(bits,8,8,24);
+
+    qDebug()<<frame.getDestination()<<frame.getSource()<<frame.getMessage_length();
+
+    Byte *bt=frame.getMessage();
+    std::string string = logics::bufferToMessage(bt,3);
+
+    std::cout<<string;
+
+ //   for(int i=0 ; i<ceil((double)frame.getMessage_length()/8) ; i++)
+ //       qDebug()<<bt[i];
 
 
- //   {'h','e','l'};
+   delete[] bt;
 
-    Byte tb;
- //   qDebug()<<sizeof(tb);
- //   qDebug()<<sizeof(b);
-
-    Bit *bits = logics::convertByteToBits(b,buffer.getBuf_length());
-
-   //  qDebug()<<sizeof(b);
-    for(int i=0;i<buffer.getBuf_length()*8;i++)
-    {
-        if(bits[i])
-            std::cout<<1;
-        else
-            std::cout<<0;
-       // qDebug()<<bits[i];
-    }
-
-    Byte *cBytes = logics::convertBitsToBytes(bits,sizeof(b)*8);
-
-    qDebug()<<"Buffer Length"<<buffer.getBuf_length();
-
-    for(int i=0;i<(buffer.getBuf_length());i++)
-    {
-        qDebug()<<i<<(char)cBytes[i];
-    }
+  // delete[] bits;
 
 }
 

@@ -153,6 +153,24 @@ void Frame::setMessage_length(int value)
 {
     message_length = value;
 }
+
+Byte Frame::getSource()
+{
+    Byte *bytes = logics::convertBitsToBytes(getSourceBits(),source_length);
+    return bytes[0];
+}
+
+Byte Frame::getDestination()
+{
+    Byte *bytes = logics::convertBitsToBytes(getDestinationBits(),destination_length);
+    return bytes[0];
+}
+
+Byte *Frame::getMessage()
+{
+    Byte *bytes = logics::convertBitsToBytes(getMessageBits(),message_length);
+    return bytes;
+}
 Frame::Frame(Bit *bits, short sour_len, short dest_len, short mess_len)
 {
     this->bits = bits;

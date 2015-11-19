@@ -13,25 +13,23 @@
 
 int main(int argc, char *argv[])
 {
-  QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+//  QApplication a(argc, argv);
+//    MainWindow w;
+//    w.show();
 
 //    QCoreApplication a(argc,argv);
-    control::Controller *control = new control::Controller();
-    w.attachController(control);
+ //   control::Controller *control = new control::Controller();
+ //   w.attachController(control);
 
  //    QTimer::singleShot(0, controller, SLOT(run()));
 //   QMetaObject::invokeMethod(controller,"run",Qt::QueuedConnection);
 
-   //  cool cool;
 
- //   med.setBit();
- //   testJohny::test_run();
+    testJohny::test_run();
 
-  testJohny::test_run2(control);
+//  testJohny::test_run2(control);
 
 
-    return a.exec();
-  //  return 0;
+  //  return a.exec();
+    return 0;
 }

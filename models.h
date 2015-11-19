@@ -137,6 +137,11 @@ public:
     void setDestination_length(short value);
     int getMessage_length() const;
     void setMessage_length(int value);
+
+    Byte getSource();
+    Byte getDestination();
+    Byte *getMessage();
+
 };
 
 #endif
