@@ -6,7 +6,7 @@
 
 ChannelMedium::ChannelMedium()
 {
-
+    this->signalStrength = logics::convertSignalStrenthToShort(SignalPower::idle);
 }
 
 ChannelMedium::~ChannelMedium()
@@ -14,25 +14,22 @@ ChannelMedium::~ChannelMedium()
 
 }
 
-void ChannelMedium::setBit(int value)
+void ChannelMedium::setStrength(int value)
 {
-    this->bitValue = value;
-    QTimer::singleShot(2000,this,SLOT(unsetBit()));
+    qDebug()<<"Value coming"<<value;
+    this->signalStrength = value;
+ //   QTimer::singleShot(2000,this,SLOT(unsetBit()));
 
-     qDebug()<<"set Executed "<<this->bitValue;
+
 
 }
 
-void ChannelMedium::timeOut()
+short ChannelMedium::getStrenth()
 {
-    qDebug()<<"Timer Executed";
-     emit done();
+    return this->signalStrength;
 }
 
-void ChannelMedium::unsetBit()
-{
-    this->bitValue = 0;
-}
+
 
 Buffer::Buffer()
 {
@@ -214,14 +211,40 @@ void spBuffer::setList(const QList<Frame> &value)
 }
 
 
+
+SignalPower Stations::getPinStrength() const
+{
+    return pinStrength;
+}
+
+void Stations::setPinStrength(const SignalPower &value)
+{
+    pinStrength = value;
+}
 Stations::Stations(int id)
 {
     this->id = id;
-  //  qDebug()<<"Station constructor"<<this->id;
+    //  qDebug()<<"Station constructor"<<this->id;
+    this->pinStrength = SignalPower::idle;
+}
+
+void Stations::executeStation()
+{
+    if(!checkChannel())
+        qDebug()<<"Strength detected";
 }
 
 bool Stations::checkChannel()
 {
-    qDebug()<<"Checks Channel"<<this->id;
+  //  qDebug()<<this->id<<this->bus->getStrenth();
+    if(this->bus->getStrenth()==CHANNEL_IDLE)
+        return true;
+    else
+        return false;
+}
+
+bool Stations::attachChannel(ChannelMedium *channel)
+{
+    this->bus = channel;
     return true;
 }

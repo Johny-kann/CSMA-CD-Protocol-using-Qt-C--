@@ -45,6 +45,7 @@ void test_run2(control::Controller *a)
  //   control::Controller controller(&a);
     a->startTimer();
     a->addStations(4);
+   // a->getStationAt(2).setPinStrength(SignalPower::positive);
 
 }
 

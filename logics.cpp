@@ -76,3 +76,14 @@ Byte *logics::convertBitsToBytes(Bit *bits, int num_bits)
 
     return bytes;
 }
+
+
+short logics::convertSignalStrenthToShort(SignalPower strength)
+{
+    if(strength == SignalPower::positive)
+        return CHANNEL_POS;
+    else if(strength == SignalPower::idle)
+       return CHANNEL_IDLE;
+    else
+        return CHANNEL_NEG;
+}

@@ -27,6 +27,9 @@ public:
     void executeOperations();
 
     void addStations(int num);
+    Stations &getStationAt(int num);
+
+    void addPinStrength();
 
 public slots:
     void run();

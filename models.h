@@ -10,27 +10,29 @@ typedef std::string Message;
 typedef bool Bit;
 typedef unsigned char Byte;
 
+enum SignalPower {positive , negative, idle};
+
 class Frame;
 class spBuffer;
 
 #define CLOCK_TIME 1000
+#define CHANNEL_POS 2
+#define CHANNEL_NEG -2
+#define CHANNEL_IDLE 0
 
 
-class ChannelMedium : public QObject
+class ChannelMedium
 {
-    Q_OBJECT
+private:
+    short signalStrength;
+
 public:
     ChannelMedium();
     ~ChannelMedium();
 
-    void setBit(int value);
+    void setStrength(int value);
+    short getStrenth();
 
-public slots:
-    void timeOut();
-    void unsetBit();
-
-signals:
-    void done();
 
 private:
     short bitValue;
@@ -61,12 +63,17 @@ private:
     spBuffer buffer;
     Frame *frame;
     int id;
+    SignalPower pinStrength;
 
 public:
     Stations(int id);
+    void executeStation();
     bool checkChannel();
-    bool attachChannel(const ChannelMedium *channel);
+    bool attachChannel(ChannelMedium *channel);
 
+
+    SignalPower getPinStrength() const;
+    void setPinStrength(const SignalPower &value);
 };
 
 

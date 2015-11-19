@@ -2,6 +2,7 @@
 #include "models.h"
 #include <QDebug>
 #include <QtCore>
+#include "logics.h"
 
 void control::Controller::test()
 {
@@ -45,7 +46,9 @@ bool control::Controller::resetTimer()
 void control::Controller::executeOperations()
 {
     for(int i=0;i<stations.size();i++)
-        stations.operator [](i).checkChannel();
+        stations.operator [](i).executeStation();
+
+    this->addPinStrength();
 }
 
 void control::Controller::addStations(int num)
@@ -53,8 +56,23 @@ void control::Controller::addStations(int num)
     for(int i=0;i<num;i++)
     {
     Stations *station = new Stations(i);
+    station->attachChannel(&med);
     this->stations.append(*station);
     }
+}
+
+Stations &control::Controller::getStationAt(int num)
+{
+    return this->stations.operator [](num);
+}
+
+void control::Controller::addPinStrength()
+{
+    short strength = 0;
+    for(int i=0 ; i<stations.size() ; i++)
+        strength += logics::convertSignalStrenthToShort(stations.at(i).getPinStrength());
+
+    this->med.setStrength(strength);
 }
 
 /*control::Controller::Controller(QObject *parent)
@@ -68,9 +86,9 @@ void control::Controller::run()
     qDebug()<<"Inside Run";
 
 
-    med.setBit(1);
+  //  med.setStrength(1);
 
-    QObject::connect(&med,SIGNAL(done()),this,SLOT(exit()));
+ //   QObject::connect(&med,SIGNAL(done()),this,SLOT(exit()));
 
  //   exit();
             //emit finished();

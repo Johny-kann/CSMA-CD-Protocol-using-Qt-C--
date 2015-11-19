@@ -17,6 +17,8 @@ Bit *convertByteToBits(Byte *bytes,int num_bytes);
 
 Byte *convertBitsToBytes(Bit *bits,int num_bits);
 
+short convertSignalStrenthToShort(SignalPower strength);
+
 }
 #endif // LOGICS
 
