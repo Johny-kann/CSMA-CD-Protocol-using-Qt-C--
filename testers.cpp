@@ -6,6 +6,8 @@
 #include <QTime>
 #include <time.h>
 #include <random>
+#include <thread>
+#include <chrono>
 
 namespace testJohny
 {
@@ -62,57 +64,28 @@ void test_run2(/*control::Controller *a*/)
 
 }
 
+void test_run3(Stations &station)
+{
+    spBuffer buffer;
+    buffer.setBufferSize(50);
+
+    logics::generateRandFrames(50,8,8,40,buffer.getList());
+
+    for(int i=0;i<50;i++)
+        qDebug()<<buffer.frameAt(i).getSource()<<buffer.frameAt(i).getDestination();
+
+    station.setBuffer(buffer);
+
+}
+
 void test_run()
 {
+//    std::this_thread::sleep_for(std::chrono::nanoseconds(10));
 
-  //  Byte b[] = {2,3,255,123};
+    Stations station1(1);
+    test_run3(station1);
 
-//   qDebug()<<sizeof(tb);
-//   qDebug()<<sizeof(b);
-//    Bit bits2[] = {false,false,true,false,true,false};
-
- //   Bit *bits = logics::convertByteToBits(b,4);
-
-  /*  for(int i=0;i<8;i++)
-        std::cout<<bits[i];
-
-
-
-    Byte *cBytes = logics::convertBitsToBytes(bits,24);
-    */
-
-    spBuffer buffer;
-    buffer.setBufferSize(10);
-
-    logics::generateRandFrames(10,8,8,40,buffer.getList());
-
-   /* for(int i=0;i<10;i++)
-    {
-
-    Bit *bits = new Bit[40];
-    logics::generateRandBits(40,bits);
-
-
-
-    Frame *frame = new Frame(bits,8,8,24);
-
-    if(!buffer.listAdd(*frame))
-        delete frame;
-
-
-    }
-*/
-
-
-    for(int i=0;i<buffer.getBufferSize();i++)
-     {   qDebug()<<buffer.frameAt(i).getSource()<<buffer.frameAt(i).getDestination();
-   //     std::cout<<logics::bufferToMessage(buffer.frameAt(i).getMessage(),buffer.getBufferSize())<<std::endl;
-    }
-
- //   for(int i=0 ; i<ceil((double)frame.getMessage_length()/8) ; i++)
- //       qDebug()<<bt[i];
-
-
+    qDebug()<<station1.getBuffer().getBufferSize();
 
 
   // delete[] bits;

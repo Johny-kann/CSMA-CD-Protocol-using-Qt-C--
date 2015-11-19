@@ -256,6 +256,16 @@ void Stations::setPinStrength(const SignalPower &value)
 {
     pinStrength = value;
 }
+
+spBuffer Stations::getBuffer() const
+{
+    return buffer;
+}
+
+void Stations::setBuffer(const spBuffer &value)
+{
+    buffer = value;
+}
 Stations::Stations(int id)
 {
     this->id = id;

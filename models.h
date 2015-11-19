@@ -77,6 +77,8 @@ public:
 
     SignalPower getPinStrength() const;
     void setPinStrength(const SignalPower &value);
+    spBuffer getBuffer() const;
+    void setBuffer(const spBuffer &value);
 };
 
 

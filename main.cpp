@@ -27,6 +27,11 @@ int main(int argc, char *argv[])
 
     testJohny::test_run();
 
+/*    Stations station1(1);
+    testJohny::test_run3(station1);
+
+    qDebug()<<station1.getBuffer().getBufferSize();
+*/
 //  testJohny::test_run2(control);
 
 

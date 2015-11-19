@@ -3,6 +3,8 @@
 #include <time.h>
 #include <QTime>
 #include <random>
+#include <chrono>
+#include <thread>
 
 bool logics::convertMessageToBuffer(const Message message, Buffer &buffer)
 {
@@ -155,6 +157,8 @@ bool logics::generateRandFrames(int numFrames, int source_length, int dest_lengt
         Frame *tempframe = new Frame(bits,source_length,dest_length,message_length);
 
         frame.append(*tempframe);
+
+        std::this_thread::sleep_for(std::chrono::nanoseconds(1));
     }
     return true;
 }
