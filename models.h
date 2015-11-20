@@ -94,7 +94,7 @@ public:
 
     SignalPower getPinStrength() const;
     void setPinStrength(const SignalPower &value);
-    spBuffer getoutBuffer() const;
+    spBuffer &getoutBuffer();
     void setoutBuffer(const spBuffer &value);
     States getCurrent_state() const;
     void setCurrent_state(const States &value);

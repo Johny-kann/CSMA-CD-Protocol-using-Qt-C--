@@ -10,6 +10,29 @@
 #include <iostream>
 #include "logics.h"
 
+void tester_run()
+{
+    control::Controller *control = new control::Controller();
+    control->addStations(4);
+
+    Byte bytes[] = {0,1,255,123,89};
+
+    Bit *bits = logics::convertByteToBits(bytes,5);
+    Frame *frame = new Frame(bits,FRAME_SOURCE_LENGTH,FRAME_DEST_LENGTH,FRAME_MESSAGE_LENGTH);
+
+
+
+    if(control->getStationAt(0).addFrame(frame))
+        qDebug()<<"Added";
+    else
+        qDebug()<<"Not Added";
+    control->getStationAt(0).setNext_state(States::sending);
+
+    Byte source = control->getStationAt(0).getoutBuffer().frameAt(0).getSource();
+    Byte dest = control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
+
+    qDebug()<<source<<dest;
+}
 
 int main(int argc, char *argv[])
 {
@@ -35,9 +58,9 @@ int main(int argc, char *argv[])
         qDebug()<<"Not Added";
     control->getStationAt(0).setNext_state(States::sending);
 
-//    Byte source = control->getStationAt(0).getoutBuffer().frameAt(0).getSource();
-//    Byte destination = control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
-  //  qDebug()<<source<<destination;//<<control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
+    Byte source = control->getStationAt(0).getoutBuffer().frameAt(0).getSource();
+    Byte destination = control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
+    qDebug()<<source<<destination;//<<control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
      control->startTimer();
 
  //    QTimer::singleShot(0, controller, SLOT(run()));
@@ -55,5 +78,5 @@ int main(int argc, char *argv[])
 
 
     return a.exec();
- //   return 0;
+//    return 0;
 }

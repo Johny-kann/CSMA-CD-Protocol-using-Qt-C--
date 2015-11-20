@@ -273,7 +273,7 @@ void Stations::setPinStrength(const SignalPower &value)
     pinStrength = value;
 }
 
-spBuffer Stations::getoutBuffer() const
+spBuffer &Stations::getoutBuffer()
 {
     return outbuffer;
 }
