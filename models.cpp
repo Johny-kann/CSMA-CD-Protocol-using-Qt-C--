@@ -3,6 +3,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <QApplication>
+#include <iostream>
 
 ChannelMedium::ChannelMedium()
 {
@@ -428,7 +429,8 @@ void Stations::receiveBitListening()
     }
   //  qDebug()<<"After Delete";
 
-    Bit bits[FRAME_SIZE] = {0};
+    Bit *bits = new Bit[FRAME_SIZE];
+  //  bits = 0;
  //   qDebug()<<"Bits array";
     this->inframe = new Frame(bits, FRAME_SOURCE_LENGTH, FRAME_DEST_LENGTH, FRAME_MESSAGE_LENGTH);
     this->inFrameRecPos = 0;
@@ -443,6 +445,7 @@ void Stations::receiveBitListening()
 
 void Stations::receiveBitReading()
 {
+
     Bit bit;
     if(logics::convertShortToSignalPower(this->bus->getStrenth())==SignalPower::positive)
         bit = 1;
@@ -451,6 +454,8 @@ void Stations::receiveBitReading()
 
     this->inframe->setBitAt(inFrameRecPos,bit);
     this->inFrameRecPos++;
+
+   //  qDebug()<<"Receive Read"<<inFrameRecPos<<bit;
 
     if(this->inFrameRecPos>=FRAME_SIZE)
     {    this->next_state = States::listening;

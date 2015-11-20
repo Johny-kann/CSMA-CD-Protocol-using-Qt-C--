@@ -43,9 +43,9 @@ int main(int argc, char *argv[])
 //    QCoreApplication a(argc,argv);
     control::Controller *control = new control::Controller();
     w.attachController(control);
-    control->addStations(4);
+    control->addStations(5);
 
-    Byte bytes[] = {0,1,255,123,89};
+    Byte bytes[] = {2,3,255};
 
     Bit *bits = logics::convertByteToBits(bytes,5);
     Frame *frame = new Frame(bits,FRAME_SOURCE_LENGTH,FRAME_DEST_LENGTH,FRAME_MESSAGE_LENGTH);

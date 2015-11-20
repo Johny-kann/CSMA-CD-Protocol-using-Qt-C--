@@ -16,15 +16,15 @@ enum States {listening, sending, receving};
 class Frame;
 class spBuffer;
 
-#define CLOCK_TIME 200
+#define CLOCK_TIME 20
 #define CHANNEL_POS 2
 #define CHANNEL_NEG -2
 #define CHANNEL_IDLE 0
 
-#define FRAME_SIZE 40
+#define FRAME_SIZE 24
 #define FRAME_SOURCE_LENGTH 8
 #define FRAME_DEST_LENGTH 8
-#define FRAME_MESSAGE_LENGTH 24
+#define FRAME_MESSAGE_LENGTH 8
 
 #define BUF_SIZE 10
 
