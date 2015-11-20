@@ -45,8 +45,19 @@ bool control::Controller::resetTimer()
 
 void control::Controller::executeOperations()
 {
+    QList<int> executeOrder;
+
     for(int i=0;i<stations.size();i++)
-        stations.operator [](i).executeStation();
+    {
+        if(stations.at(i).getCurrent_state()==States::sending)
+            executeOrder.push_back(i);
+        else
+            executeOrder.push_front(i);
+
+    }
+
+    for(int i=0;i<stations.size();i++)
+      stations.operator [](executeOrder.operator [](i)).executeStation();
 
     this->addPinStrength();
 }

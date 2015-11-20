@@ -46,22 +46,29 @@ int main(int argc, char *argv[])
     control->addStations(5);
 
     Byte bytes[] = {2,3,255};
+    Byte byte2[] = {1,4,255};
 
     Bit *bits = logics::convertByteToBits(bytes,5);
     Frame *frame = new Frame(bits,FRAME_SOURCE_LENGTH,FRAME_DEST_LENGTH,FRAME_MESSAGE_LENGTH);
 
+    Bit *bits2 = logics::convertByteToBits(byte2,5);
+    Frame *frame2 = new Frame(bits2,FRAME_SOURCE_LENGTH,FRAME_DEST_LENGTH,FRAME_MESSAGE_LENGTH);
 
 
-    if(control->getStationAt(0).addFrame(frame))
+    if(control->getStationAt(2).addFrame(frame))
         qDebug()<<"Added";
     else
         qDebug()<<"Not Added";
-    control->getStationAt(0).setNext_state(States::sending);
 
-    Byte source = control->getStationAt(0).getoutBuffer().frameAt(0).getSource();
-    Byte destination = control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
-    qDebug()<<source<<destination;//<<control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
-     control->startTimer();
+  /*  if(control->getStationAt(1).addFrame(frame2))
+        qDebug()<<"Added";
+    else
+        qDebug()<<"Not Added";
+        */
+    control->getStationAt(2).setNext_state(States::sending);
+//    control->getStationAt(1).setNext_state(States::sending);
+
+    control->startTimer();
 
  //    QTimer::singleShot(0, controller, SLOT(run()));
 //   QMetaObject::invokeMethod(controller,"run",Qt::QueuedConnection);

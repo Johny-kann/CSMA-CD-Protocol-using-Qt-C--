@@ -335,7 +335,8 @@ void Stations::executeStation()
         }
         else if(isCollitionDetected())
         {
-
+            qDebug()<<"Collition detected";
+            next_state = States::listening;
         }
     }else if(current_state==States::sending)
     {
