@@ -11,14 +11,22 @@ typedef bool Bit;
 typedef unsigned char Byte;
 
 enum SignalPower {positive , negative, idle};
+enum States {listening, checking, sending, receving};
 
 class Frame;
 class spBuffer;
 
-#define CLOCK_TIME 1000
+#define CLOCK_TIME 200
 #define CHANNEL_POS 2
 #define CHANNEL_NEG -2
 #define CHANNEL_IDLE 0
+
+#define FRAME_SIZE 40
+#define FRAME_SOURCE_LENGTH 8
+#define FRAME_DEST_LENGTH 8
+#define FRAME_MESSAGE_LENGTH 24
+
+#define BUF_SIZE 10
 
 
 class ChannelMedium
@@ -47,7 +55,7 @@ private:
     int buf_size;
 
 public:
-
+    spBuffer();
 bool listAdd(Frame &frame);
 
 QList<Frame> &getList();
@@ -63,10 +71,12 @@ class Stations
 {
 private:
     ChannelMedium *bus;
-    spBuffer buffer;
-    Frame *frame;
+    spBuffer outbuffer,inbuffer;
+    Frame *outframe,*inframe;
     int id;
     SignalPower pinStrength;
+    States current_state,next_state,prev_state;
+    int frameSentPos,frameSize;
 
 public:
     Stations(int id);
@@ -74,11 +84,18 @@ public:
     bool checkChannel();
     bool attachChannel(ChannelMedium *channel);
 
+    void sendBit();
 
     SignalPower getPinStrength() const;
     void setPinStrength(const SignalPower &value);
-    spBuffer getBuffer() const;
-    void setBuffer(const spBuffer &value);
+    spBuffer getoutBuffer() const;
+    void setoutBuffer(const spBuffer &value);
+    States getCurrent_state() const;
+    void setCurrent_state(const States &value);
+    States getNext_state() const;
+    void setNext_state(const States &value);
+
+    bool addFrame(Frame *frame);
 };
 
 
@@ -146,6 +163,7 @@ public:
     Byte getSource();
     Byte getDestination();
     Byte *getMessage();
+    Bit getBitAt(int index);
 
 };
 

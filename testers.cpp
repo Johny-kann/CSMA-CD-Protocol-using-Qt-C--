@@ -74,7 +74,7 @@ void test_run3(Stations &station)
     for(int i=0;i<50;i++)
         qDebug()<<buffer.frameAt(i).getSource()<<buffer.frameAt(i).getDestination();
 
-    station.setBuffer(buffer);
+    station.setoutBuffer(buffer);
 
 }
 
@@ -85,7 +85,7 @@ void test_run()
     Stations station1(1);
     test_run3(station1);
 
-    qDebug()<<station1.getBuffer().getBufferSize();
+    qDebug()<<station1.getoutBuffer().getBufferSize();
 
 
   // delete[] bits;

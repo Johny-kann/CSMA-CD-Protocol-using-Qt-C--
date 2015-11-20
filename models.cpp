@@ -16,7 +16,7 @@ ChannelMedium::~ChannelMedium()
 
 void ChannelMedium::setStrength(int value)
 {
-    qDebug()<<"Value coming"<<value;
+
     this->signalStrength = value;
  //   QTimer::singleShot(2000,this,SLOT(unsetBit()));
 
@@ -171,6 +171,12 @@ Byte *Frame::getMessage()
     Byte *bytes = logics::convertBitsToBytes(getMessageBits(),message_length);
     return bytes;
 }
+
+Bit Frame::getBitAt(int index)
+{
+    return this->bits[index];
+}
+
 Frame::Frame(Bit *bits, short sour_len, short dest_len, short mess_len)
 {
     this->bits = bits;
@@ -205,6 +211,11 @@ bool *Frame::getDestinationBits()
 bool *Frame::getMessageBits()
 {
     return bits + source_length + destination_length;
+}
+
+spBuffer::spBuffer()
+{
+    buf_size = BUF_SIZE;
 }
 
 bool spBuffer::listAdd(Frame &frame)
@@ -257,26 +268,69 @@ void Stations::setPinStrength(const SignalPower &value)
     pinStrength = value;
 }
 
-spBuffer Stations::getBuffer() const
+spBuffer Stations::getoutBuffer() const
 {
-    return buffer;
+    return outbuffer;
 }
 
-void Stations::setBuffer(const spBuffer &value)
+void Stations::setoutBuffer(const spBuffer &value)
 {
-    buffer = value;
+    outbuffer = value;
+}
+
+States Stations::getCurrent_state() const
+{
+    return current_state;
+}
+
+void Stations::setCurrent_state(const States &value)
+{
+    current_state = value;
+}
+
+States Stations::getNext_state() const
+{
+    return next_state;
+}
+
+void Stations::setNext_state(const States &value)
+{
+    next_state = value;
+}
+
+bool Stations::addFrame(Frame *frame)
+{
+    return this->outbuffer.listAdd(*frame);
 }
 Stations::Stations(int id)
 {
     this->id = id;
     //  qDebug()<<"Station constructor"<<this->id;
     this->pinStrength = SignalPower::idle;
+    current_state = States::listening;
+    next_state = States::listening;
+    prev_state = States::listening;
+    this->frameSentPos = 0;
+
+    //this->outframe = new Frame()
+    this->frameSize = FRAME_SIZE;
 }
 
 void Stations::executeStation()
 {
-    if(!checkChannel())
-        qDebug()<<"Strength detected";
+    if(current_state==States::listening)
+    {
+        if(!checkChannel())
+            qDebug()<<"Strength detected";
+    }else if(current_state==States::sending)
+    {
+        sendBit();
+    }
+
+
+    prev_state = current_state;
+    current_state = next_state;
+
 }
 
 bool Stations::checkChannel()
@@ -292,4 +346,36 @@ bool Stations::attachChannel(ChannelMedium *channel)
 {
     this->bus = channel;
     return true;
+}
+
+void Stations::sendBit()
+{
+    if(prev_state!=States::sending)
+    {    this->outframe = &outbuffer.getList().first();
+        this->frameSentPos = 0;
+        this->frameSize = outframe->getTotalLength();
+    }
+
+    Bit bit = outframe->getBitAt(frameSentPos);
+    qDebug()<<"Sending "<<bit;
+
+    if(bit)
+    {
+        this->setPinStrength(SignalPower::positive);
+         frameSentPos++;
+    }else
+    {
+        this->setPinStrength(SignalPower::negative);
+         frameSentPos++;
+    }
+
+    if(frameSentPos==frameSize)
+    {
+        next_state = States::listening;
+        qDebug()<<"Station Changing to Listening mode"<<this->id;
+        this->setPinStrength(SignalPower::idle);
+    }
+
+   // prev_state = current_state;
+
 }
