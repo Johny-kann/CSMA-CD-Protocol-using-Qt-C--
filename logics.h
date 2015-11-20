@@ -19,6 +19,8 @@ Byte *convertBitsToBytes(Bit *bits,int num_bits);
 
 short convertSignalStrenthToShort(SignalPower strength);
 
+SignalPower convertShortToSignalPower(short strength);
+
 int generateRand(int lowEnd,int highEnd,int prob);
 
 bool generateRandBits(int numBits, Bit* bits);

@@ -11,7 +11,7 @@ typedef bool Bit;
 typedef unsigned char Byte;
 
 enum SignalPower {positive , negative, idle};
-enum States {listening, checking, sending, receving};
+enum States {listening, sending, receving};
 
 class Frame;
 class spBuffer;
@@ -77,14 +77,20 @@ private:
     SignalPower pinStrength;
     States current_state,next_state,prev_state;
     int frameSentPos,frameSize;
+    int inFrameRecPos;
 
 public:
     Stations(int id);
     void executeStation();
     bool checkChannel();
+    bool isCollitionDetected();
     bool attachChannel(ChannelMedium *channel);
 
     void sendBit();
+    void receiveBitListening();
+    void receiveBitReading();
+
+    void processInFrame();
 
     SignalPower getPinStrength() const;
     void setPinStrength(const SignalPower &value);
@@ -164,6 +170,7 @@ public:
     Byte getDestination();
     Byte *getMessage();
     Bit getBitAt(int index);
+    void setBitAt(int index,Bit bit);
 
 };
 

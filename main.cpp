@@ -35,7 +35,9 @@ int main(int argc, char *argv[])
         qDebug()<<"Not Added";
     control->getStationAt(0).setNext_state(States::sending);
 
-    qDebug()<<control->getStationAt(0).getoutBuffer().frameAt(0).getMessage_length();
+//    Byte source = control->getStationAt(0).getoutBuffer().frameAt(0).getSource();
+//    Byte destination = control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
+  //  qDebug()<<source<<destination;//<<control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
      control->startTimer();
 
  //    QTimer::singleShot(0, controller, SLOT(run()));

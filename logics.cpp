@@ -162,3 +162,15 @@ bool logics::generateRandFrames(int numFrames, int source_length, int dest_lengt
     }
     return true;
 }
+
+
+SignalPower logics::convertShortToSignalPower(short strength)
+{
+    if(strength == CHANNEL_POS)
+        return SignalPower::positive;
+    else if(strength == CHANNEL_NEG)
+        return SignalPower::negative;
+    else
+        return SignalPower::idle;
+
+}

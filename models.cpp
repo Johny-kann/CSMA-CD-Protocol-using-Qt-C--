@@ -177,6 +177,11 @@ Bit Frame::getBitAt(int index)
     return this->bits[index];
 }
 
+void Frame::setBitAt(int index, Bit bit)
+{
+    this->bits[index] = bit;
+}
+
 Frame::Frame(Bit *bits, short sour_len, short dest_len, short mess_len)
 {
     this->bits = bits;
@@ -314,17 +319,29 @@ Stations::Stations(int id)
 
     //this->outframe = new Frame()
     this->frameSize = FRAME_SIZE;
+
+    this->inframe = NULL;
 }
 
 void Stations::executeStation()
 {
     if(current_state==States::listening)
     {
-        if(!checkChannel())
-            qDebug()<<"Strength detected";
+     //   qDebug()<<"Listening by Station"<<id;
+        if(!checkChannel() && !isCollitionDetected())
+        {    qDebug()<<"Strength detected is Listening by Station"<<id;
+            this->receiveBitListening();
+        }
+        else if(isCollitionDetected())
+        {
+
+        }
     }else if(current_state==States::sending)
     {
         sendBit();
+    }else if(current_state==States::receving)
+    {
+        this->receiveBitReading();
     }
 
 
@@ -333,6 +350,11 @@ void Stations::executeStation()
 
 }
 
+/*
+ *
+ *Checks the ChannelMedium
+ *
+ * */
 bool Stations::checkChannel()
 {
   //  qDebug()<<this->id<<this->bus->getStrenth();
@@ -340,6 +362,14 @@ bool Stations::checkChannel()
         return true;
     else
         return false;
+}
+
+bool Stations::isCollitionDetected()
+{
+    if(this->bus->getStrenth()>=CHANNEL_NEG && this->bus->getStrenth()<=CHANNEL_POS)
+        return false;
+    else
+        return true;
 }
 
 bool Stations::attachChannel(ChannelMedium *channel)
@@ -357,7 +387,7 @@ void Stations::sendBit()
     }
 
     Bit bit = outframe->getBitAt(frameSentPos);
-    qDebug()<<"Sending "<<bit;
+ //   qDebug()<<"Sending "<<bit;
 
     if(bit)
     {
@@ -377,5 +407,69 @@ void Stations::sendBit()
     }
 
    // prev_state = current_state;
+
+}
+
+void Stations::receiveBitListening()
+{
+    Bit bit;
+    if(logics::convertShortToSignalPower(this->bus->getStrenth())==SignalPower::positive)
+     {   bit = 1;
+    }
+    else if(logics::convertShortToSignalPower(this->bus->getStrenth())==SignalPower::negative)
+     {   bit = 0;
+
+    }
+
+    int a = 0;
+    if(!(this->inframe == NULL))
+    {
+        delete this->inframe;
+    }
+  //  qDebug()<<"After Delete";
+
+    Bit bits[FRAME_SIZE] = {0};
+ //   qDebug()<<"Bits array";
+    this->inframe = new Frame(bits, FRAME_SOURCE_LENGTH, FRAME_DEST_LENGTH, FRAME_MESSAGE_LENGTH);
+    this->inFrameRecPos = 0;
+
+    this->inframe->setBitAt(inFrameRecPos,bit);
+    this->inFrameRecPos++;
+
+    this->next_state = States::receving;
+    qDebug()<<id<<"Changing to Receiving mode";
+
+}
+
+void Stations::receiveBitReading()
+{
+    Bit bit;
+    if(logics::convertShortToSignalPower(this->bus->getStrenth())==SignalPower::positive)
+        bit = 1;
+    else if(logics::convertShortToSignalPower(this->bus->getStrenth())==SignalPower::negative)
+        bit = 0;
+
+    this->inframe->setBitAt(inFrameRecPos,bit);
+    this->inFrameRecPos++;
+
+    if(this->inFrameRecPos>=FRAME_SIZE)
+    {    this->next_state = States::listening;
+        this->processInFrame();
+
+    }
+}
+
+void Stations::processInFrame()
+{
+    Byte source = this->inframe->getSource();
+    Byte dest = this->inframe->getDestination();
+    Byte *Message = this->inframe->getMessage();
+
+    if(dest==this->id)
+        qDebug()<<"I Station"<<id<<"Received frame from"<<source;
+    else
+        qDebug()<<"Station"<<dest<<"Received frame from"<<source;
+
+    delete[] Message;
 
 }
