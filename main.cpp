@@ -12,31 +12,22 @@
 
 void tester_run()
 {
-    control::Controller *control = new control::Controller();
-    control->addStations(4);
+    QList<Frame> frames;
 
-    Byte bytes[] = {0,1,255,123,89};
+    if(logics::generateRandFramesForAStation(1,8,10,8,10,8,frames))
+        qDebug()<<"True";
 
-    Bit *bits = logics::convertByteToBits(bytes,5);
-    Frame *frame = new Frame(bits,FRAME_SOURCE_LENGTH,FRAME_DEST_LENGTH,FRAME_MESSAGE_LENGTH);
+    for(int i=0;i<24;i++)
+        std::cout<<frames.operator [](0).getBitAt(i)<<" ";
 
-
-
-    if(control->getStationAt(0).addFrame(frame))
-        qDebug()<<"Added";
-    else
-        qDebug()<<"Not Added";
-    control->getStationAt(0).setNext_state(States::sending);
-
-    Byte source = control->getStationAt(0).getoutBuffer().frameAt(0).getSource();
-    Byte dest = control->getStationAt(0).getoutBuffer().frameAt(0).getDestination();
-
-    qDebug()<<source<<dest;
 }
 
 int main(int argc, char *argv[])
 {
-  QApplication a(argc, argv);
+  //  tester_run();
+
+
+    QApplication a(argc, argv);
     MainWindow w;
     w.show();
 
@@ -60,15 +51,15 @@ int main(int argc, char *argv[])
     else
         qDebug()<<"Not Added";
 
-  /*  if(control->getStationAt(1).addFrame(frame2))
+    if(control->getStationAt(1).addFrame(frame2))
         qDebug()<<"Added";
     else
         qDebug()<<"Not Added";
-        */
-    control->getStationAt(2).setNext_state(States::sending);
+
+//    control->getStationAt(2).setNext_state(States::sending);
 //    control->getStationAt(1).setNext_state(States::sending);
 
-    control->startTimer();
+//    control->startTimer();
 
  //    QTimer::singleShot(0, controller, SLOT(run()));
 //   QMetaObject::invokeMethod(controller,"run",Qt::QueuedConnection);
@@ -84,6 +75,6 @@ int main(int argc, char *argv[])
 //  testJohny::test_run2(control);
 
 
-    return a.exec();
-//    return 0;
+//    return a.exec();
+    return 0;
 }

@@ -42,6 +42,21 @@ unsigned char *logics::pointerShifter(unsigned char *buf, int index)
     return starter;
 }
 
+bool *logics::convertByteToBits(Byte *bytes, int num_bytes,Bit *bits)
+{
+ //   Bit *bits = new Bit[num_bytes*8];
+
+    for(int i=0; i<num_bytes; i++)
+    {
+        for(int j=0; j<8; j++)
+        {
+           *(bits + 8*i + j) = (*(bytes + i)>>j &1);
+//            *(bits + 8*i + j) = (*(bytes + i)<<j &0x80);
+        }
+    }
+
+    return bits;
+}
 
 Bit *logics::convertByteToBits(Byte *bytes, int num_bytes)
 {
@@ -164,6 +179,7 @@ bool logics::generateRandFrames(int numFrames, int source_length, int dest_lengt
 }
 
 
+
 SignalPower logics::convertShortToSignalPower(short strength)
 {
     if(strength == CHANNEL_POS)
@@ -173,4 +189,45 @@ SignalPower logics::convertShortToSignalPower(short strength)
     else
         return SignalPower::idle;
 
+}
+
+
+bool logics::generateRandFramesForAStation(int numFrames, int source_len, int sourc_id, int dest_len, int num_stations, int mess_len, QList<Frame> &frame)
+{
+    for(int i=0;i<numFrames;i++)
+    {
+        int total = source_len + dest_len + mess_len;
+
+        Byte source = sourc_id;
+        Byte dest = generateRand(0,num_stations-1,QTime::currentTime().msec()*time(NULL)*(i+1));
+
+        std::this_thread::sleep_for(std::chrono::nanoseconds(1));
+
+        if(dest == sourc_id)
+            dest = dest+1;
+
+
+        Bit *bits = new Bit[total];
+
+        logics::convertByteToBits(&source,1,bits);  // source
+
+    /*    for(int i=0;i<source_len;i++)
+            std::cout<<bits[i]<<" ";
+        std::cout<<'\n';
+*/
+        logics::convertByteToBits(&dest,1,bits+source_len);
+
+  /*      for(int i=0;i<soure_len+dest_len;i++)
+            std::cout<<bits[i]<<" ";
+        std::cout<<'\n';
+*/
+        logics::generateRandBits(mess_len,bits+source_len+dest_len);
+
+        Frame *tempframe = new Frame(bits,source_len,dest_len,mess_len);
+
+        frame.append(*tempframe);
+
+        std::this_thread::sleep_for(std::chrono::nanoseconds(1));
+    }
+    return true;
 }
