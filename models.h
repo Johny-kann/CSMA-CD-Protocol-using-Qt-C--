@@ -1,9 +1,12 @@
 #include <string>
 
+
+
 #ifndef MODELS_H
 #define MODELS_H
 
 #include <QApplication>
+//#include "controller.h"
 //enum bitValue {Postive, Negative};
 
 typedef std::string Message;
@@ -28,11 +31,17 @@ class spBuffer;
 
 #define BUF_SIZE 10
 
-
+namespace control
+{
+class Controller;
+}
 class ChannelMedium
 {
 private:
     short signalStrength;
+    int num_collision;
+    bool collisionInChannel;
+    control::Controller *controller;
 
 public:
     ChannelMedium();
@@ -41,6 +50,16 @@ public:
     void setStrength(int value);
     short getStrenth();
 
+    void setCollision();
+
+    void execute();
+
+
+    int getNum_collision() const;
+    void setNum_collision(int value);
+
+    control::Controller *getController() const;
+    void setController(control::Controller *value);
 
 private:
     short bitValue;
@@ -91,6 +110,8 @@ public:
     void receiveBitReading();
 
     void processInFrame();
+
+    void collisionChangeMode();
 
     SignalPower getPinStrength() const;
     void setPinStrength(const SignalPower &value);

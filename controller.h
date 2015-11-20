@@ -1,9 +1,13 @@
-#include <QCoreApplication>
+
 
 #ifndef CONTROLLER
 #define CONTROLLER
 
+#include <QCoreApplication>
 #include "models.h"
+
+class ChannelMedium;
+class Stations;
 
 namespace control
 {
@@ -16,6 +20,7 @@ private:
     ChannelMedium med;
     QList<Stations> stations;
     QTimer *mainTimer;
+    int num_collisions;
 
 public:
     void test();
@@ -30,6 +35,8 @@ public:
     Stations &getStationAt(int num);
 
     void addPinStrength();
+
+    void collisionChangeMode();
 
 public slots:
     void run();

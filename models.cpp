@@ -1,18 +1,41 @@
 #include "models.h"
 #include "logics.h"
+#include "controller.h"
 #include <QTimer>
 #include <QDebug>
 #include <QApplication>
 #include <iostream>
 
+
+int ChannelMedium::getNum_collision() const
+{
+    return num_collision;
+}
+
+void ChannelMedium::setNum_collision(int value)
+{
+    num_collision = value;
+}
+
+control::Controller *ChannelMedium::getController() const
+{
+    return controller;
+}
+
+void ChannelMedium::setController(control::Controller *value)
+{
+    controller = value;
+}
 ChannelMedium::ChannelMedium()
 {
     this->signalStrength = logics::convertSignalStrenthToShort(SignalPower::idle);
+    this->num_collision = 0;
+    this->collisionInChannel = 0;
 }
 
 ChannelMedium::~ChannelMedium()
 {
-
+    free(controller);
 }
 
 void ChannelMedium::setStrength(int value)
@@ -28,6 +51,22 @@ void ChannelMedium::setStrength(int value)
 short ChannelMedium::getStrenth()
 {
     return this->signalStrength;
+}
+
+void ChannelMedium::setCollision()
+{
+    collisionInChannel = true;
+}
+
+void ChannelMedium::execute()
+{
+    if(collisionInChannel)
+    {
+        num_collision++;
+        collisionInChannel = false;
+        qDebug()<<"Collision Added"<<num_collision;
+        this->controller->collisionChangeMode();
+    }
 }
 
 
@@ -335,7 +374,7 @@ void Stations::executeStation()
         }
         else if(isCollitionDetected())
         {
-            qDebug()<<"Collition detected";
+            qDebug()<<"Collition detected"<<id;
             next_state = States::listening;
         }
     }else if(current_state==States::sending)
@@ -361,7 +400,7 @@ bool Stations::checkChannel()
 {
   //  qDebug()<<this->id<<this->bus->getStrenth();
     if(this->bus->getStrenth()==CHANNEL_IDLE)
-        return true;
+     {   return true;  }
     else
         return false;
 }
@@ -371,7 +410,7 @@ bool Stations::isCollitionDetected()
     if(this->bus->getStrenth()>=CHANNEL_NEG && this->bus->getStrenth()<=CHANNEL_POS)
         return false;
     else
-        return true;
+      { this->bus->setCollision(); return true;   }
 }
 
 bool Stations::attachChannel(ChannelMedium *channel)
@@ -477,5 +516,12 @@ void Stations::processInFrame()
         qDebug()<<"Station"<<dest<<"Received frame from"<<source;
 
     delete[] Message;
+
+}
+
+void Stations::collisionChangeMode()
+{
+ this->current_state = States::listening;
+    this->setPinStrength(SignalPower::idle);
 
 }

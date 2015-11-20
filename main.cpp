@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     w.attachController(control);
     control->addStations(5);
 
-    Byte bytes[] = {2,3,255};
+  /*  Byte bytes[] = {2,3,255};
     Byte byte2[] = {1,4,255};
 
     Bit *bits = logics::convertByteToBits(bytes,5);
@@ -44,9 +44,12 @@ int main(int argc, char *argv[])
 
     Bit *bits2 = logics::convertByteToBits(byte2,5);
     Frame *frame2 = new Frame(bits2,FRAME_SOURCE_LENGTH,FRAME_DEST_LENGTH,FRAME_MESSAGE_LENGTH);
+*/
+    logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,0,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(0).getoutBuffer().getList());
 
+    logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,1,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(1).getoutBuffer().getList());
 
-    if(control->getStationAt(2).addFrame(frame))
+ /*   if(control->getStationAt(2).addFrame(frame))
         qDebug()<<"Added";
     else
         qDebug()<<"Not Added";
@@ -56,10 +59,13 @@ int main(int argc, char *argv[])
     else
         qDebug()<<"Not Added";
 
-//    control->getStationAt(2).setNext_state(States::sending);
-//    control->getStationAt(1).setNext_state(States::sending);
+                */
 
-//    control->startTimer();
+ //   control->getStationAt(2).setNext_state(States::sending);
+    control->getStationAt(0).setNext_state(States::sending);
+     control->getStationAt(1).setNext_state(States::sending);
+
+    control->startTimer();
 
  //    QTimer::singleShot(0, controller, SLOT(run()));
 //   QMetaObject::invokeMethod(controller,"run",Qt::QueuedConnection);
@@ -75,6 +81,6 @@ int main(int argc, char *argv[])
 //  testJohny::test_run2(control);
 
 
-//    return a.exec();
-    return 0;
+    return a.exec();
+//    return 0;
 }

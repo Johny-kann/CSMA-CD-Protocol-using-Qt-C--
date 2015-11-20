@@ -13,6 +13,8 @@ control::Controller::Controller(QObject *parent)
 {
     mainTimer = new QTimer(this);
     connect(mainTimer,SIGNAL(timeout()),this,SLOT(update()));
+    this->num_collisions = 0;
+    this->med.setController(this);
 
     //  qDebug()<<"Constructor";
 }
@@ -45,6 +47,9 @@ bool control::Controller::resetTimer()
 
 void control::Controller::executeOperations()
 {
+
+    this->med.execute();
+
     QList<int> executeOrder;
 
     for(int i=0;i<stations.size();i++)
@@ -84,6 +89,13 @@ void control::Controller::addPinStrength()
         strength += logics::convertSignalStrenthToShort(stations.at(i).getPinStrength());
 
     this->med.setStrength(strength);
+}
+
+void control::Controller::collisionChangeMode()
+{
+    for(int i=0;i<stations.size();i++)
+        stations.operator [](i).collisionChangeMode();
+
 }
 
 /*control::Controller::Controller(QObject *parent)
