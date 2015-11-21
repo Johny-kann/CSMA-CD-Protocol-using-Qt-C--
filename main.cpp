@@ -13,7 +13,11 @@
 
 void tester_run()
 {
-   std::cout<<status::collisions;
+  // std::cout<<status::collisions;
+    for(int i=0;i<100;i++)
+     {   qDebug()<<logics::generateRand(0,60,RAND_SEED_CONST);
+        ONE_NANO_SEC_WAIT;
+    }
 
 }
 
@@ -21,7 +25,7 @@ void tester_run()
 
 int main(int argc, char *argv[])
 {
-    tester_run();
+//    tester_run();
 
 
     QApplication a(argc, argv);
@@ -46,9 +50,8 @@ int main(int argc, char *argv[])
 
 
 
-
     return a.exec();
 
-//   tester_run();
-//    return 0;
+   tester_run();
+    return 0;
 }
