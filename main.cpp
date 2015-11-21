@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include "logics.h"
+//#include "status.h"
 
 void tester_run()
 {
@@ -45,9 +46,13 @@ int main(int argc, char *argv[])
     Bit *bits2 = logics::convertByteToBits(byte2,5);
     Frame *frame2 = new Frame(bits2,FRAME_SOURCE_LENGTH,FRAME_DEST_LENGTH,FRAME_MESSAGE_LENGTH);
 */
-    logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,0,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(0).getoutBuffer().getList());
+    logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,0,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(0).getoutBuffer().getList());
 
     logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,1,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(1).getoutBuffer().getList());
+
+     logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,3,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(3).getoutBuffer().getList());
+
+  //   status::Status::addNumberOfCollisions();
 
  /*   if(control->getStationAt(2).addFrame(frame))
         qDebug()<<"Added";
@@ -62,8 +67,8 @@ int main(int argc, char *argv[])
                 */
 
  //   control->getStationAt(2).setNext_state(States::sending);
-    control->getStationAt(0).setNext_state(States::sending);
-     control->getStationAt(1).setNext_state(States::sending);
+ //   control->getStationAt(0).setNext_state(States::sending);
+  //   control->getStationAt(1).setNext_state(States::sending);
 
     control->startTimer();
 

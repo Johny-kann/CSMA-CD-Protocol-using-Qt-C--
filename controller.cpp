@@ -15,6 +15,7 @@ control::Controller::Controller(QObject *parent)
     connect(mainTimer,SIGNAL(timeout()),this,SLOT(update()));
     this->num_collisions = 0;
     this->med.setController(this);
+    this->Total_Cycles = 100;
 
     //  qDebug()<<"Constructor";
 }
@@ -47,6 +48,17 @@ bool control::Controller::resetTimer()
 
 void control::Controller::executeOperations()
 {
+    if(Total_Cycles==0)
+    {
+        qDebug()<<"Breaking";
+        stopTimer();
+     //   this->statusPrinter();
+
+        return;
+    }else
+    {
+        Total_Cycles--;
+    }
 
     this->med.execute();
 
@@ -96,6 +108,14 @@ void control::Controller::collisionChangeMode()
     for(int i=0;i<stations.size();i++)
         stations.operator [](i).collisionChangeMode();
 
+}
+
+void control::Controller::statusPrinter()
+{
+ /*   qDebug()<<"Number of collisions"<<status::number_of_collisions;
+    qDebug()<<"Number of frames generated"<<status::number_of_frames_generated;
+    qDebug()<<"Number of successful transmission"<<status::number_of_frames_successfully_transmitted;
+    */
 }
 
 /*control::Controller::Controller(QObject *parent)

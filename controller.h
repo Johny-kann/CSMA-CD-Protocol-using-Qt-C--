@@ -5,6 +5,8 @@
 
 #include <QCoreApplication>
 #include "models.h"
+//#include "status.h"
+
 
 class ChannelMedium;
 class Stations;
@@ -20,6 +22,7 @@ private:
     ChannelMedium med;
     QList<Stations> stations;
     QTimer *mainTimer;
+    long int Total_Cycles;
     int num_collisions;
 
 public:
@@ -37,6 +40,8 @@ public:
     void addPinStrength();
 
     void collisionChangeMode();
+
+    void statusPrinter();
 
 public slots:
     void run();

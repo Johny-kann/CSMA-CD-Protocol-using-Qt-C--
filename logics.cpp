@@ -173,6 +173,8 @@ bool logics::generateRandFrames(int numFrames, int source_length, int dest_lengt
 
         frame.append(*tempframe);
 
+     //   status::number_of_frames_generated;
+
         std::this_thread::sleep_for(std::chrono::nanoseconds(1));
     }
     return true;

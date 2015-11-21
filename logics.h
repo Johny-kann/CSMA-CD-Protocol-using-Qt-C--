@@ -1,8 +1,12 @@
 #include "models.h"
+//#include "status.h"
 
 
 #ifndef LOGICS
 #define LOGICS
+
+#define RAND_SEED_CONST QTime::currentTime().msec()*time(NULL)
+#define ONE_NANO_SEC_WAIT std::this_thread::sleep_for(std::chrono::nanoseconds(1))
 
 namespace logics
 {

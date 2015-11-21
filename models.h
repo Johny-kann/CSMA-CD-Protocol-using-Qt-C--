@@ -31,6 +31,8 @@ class spBuffer;
 
 #define BUF_SIZE 10
 
+#define TIME_SLOT 5
+
 namespace control
 {
 class Controller;
@@ -83,6 +85,7 @@ Frame &frameAt(int i);
 void setList(const QList<Frame> &value);
 void setBufferSize(int size);
 int getBufferSize();
+int framesInBuffer();
 };
 
 
@@ -97,10 +100,13 @@ private:
     States current_state,next_state,prev_state;
     int frameSentPos,frameSize;
     int inFrameRecPos;
+    int waitPeriod;
+    bool waitingForChannel;
 
 public:
     Stations(int id);
     void executeStation();
+
     bool checkChannel();
     bool isCollitionDetected();
     bool attachChannel(ChannelMedium *channel);
@@ -112,6 +118,8 @@ public:
     void processInFrame();
 
     void collisionChangeMode();
+
+    void bufferCheck();
 
     SignalPower getPinStrength() const;
     void setPinStrength(const SignalPower &value);
