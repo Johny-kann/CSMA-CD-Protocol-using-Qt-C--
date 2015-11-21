@@ -5,6 +5,7 @@
 #include <random>
 #include <chrono>
 #include <thread>
+#include "status.h"
 
 bool logics::convertMessageToBuffer(const Message message, Buffer &buffer)
 {
@@ -175,6 +176,7 @@ bool logics::generateRandFrames(int numFrames, int source_length, int dest_lengt
 
      //   status::number_of_frames_generated;
 
+
         std::this_thread::sleep_for(std::chrono::nanoseconds(1));
     }
     return true;
@@ -226,6 +228,8 @@ bool logics::generateRandFramesForAStation(int numFrames, int source_len, int so
         logics::generateRandBits(mess_len,bits+source_len+dest_len);
 
         Frame *tempframe = new Frame(bits,source_len,dest_len,mess_len);
+
+        status::addFrameGenerated();
 
         frame.append(*tempframe);
 

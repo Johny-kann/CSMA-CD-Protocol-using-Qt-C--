@@ -10,6 +10,7 @@
 #include <QTime>
 #include <chrono>
 #include <thread>
+#include "status.h"
 
 
 int ChannelMedium::getNum_collision() const
@@ -70,7 +71,7 @@ void ChannelMedium::execute()
         num_collision++;
         collisionInChannel = false;
         qDebug()<<"Collision Added"<<num_collision;
-  //      status::addNumberOfCollisions();
+        status::addCollisions();
         this->controller->collisionChangeMode();
     }
 }
@@ -549,6 +550,7 @@ void Stations::processInFrame()
     if(dest==this->id)
      {   qDebug()<<"I Station"<<id<<"Received frame from"<<source;
     //    status::addSuccessfulFrameTransmission();
+        status::addFrameSuccessTransmits();
     }
     else
         qDebug()<<"Station"<<dest<<"Received frame from"<<source;

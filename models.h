@@ -29,6 +29,8 @@ class spBuffer;
 #define FRAME_DEST_LENGTH 8
 #define FRAME_MESSAGE_LENGTH 8
 
+#define TOTAL_TIME 500
+
 #define BUF_SIZE 10
 
 #define TIME_SLOT 5

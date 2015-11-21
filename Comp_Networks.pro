@@ -17,11 +17,13 @@ SOURCES += main.cpp\
     models.cpp \
     controller.cpp \
     testers.cpp \
-    logics.cpp
+    logics.cpp \
+    status.cpp
 
 HEADERS  += mainwindow.h \
     models.h \
     controller.h \
-    logics.h
+    logics.h \
+    status.h
 
 FORMS    += mainwindow.ui

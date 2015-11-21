@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QtCore>
 #include "logics.h"
+#include "status.h"
 
 void control::Controller::test()
 {
@@ -15,7 +16,7 @@ control::Controller::Controller(QObject *parent)
     connect(mainTimer,SIGNAL(timeout()),this,SLOT(update()));
     this->num_collisions = 0;
     this->med.setController(this);
-    this->Total_Cycles = 100;
+    this->Total_Cycles = 500;
 
     //  qDebug()<<"Constructor";
 }
@@ -52,7 +53,7 @@ void control::Controller::executeOperations()
     {
         qDebug()<<"Breaking";
         stopTimer();
-     //   this->statusPrinter();
+        this->statusPrinter();
 
         return;
     }else
@@ -112,10 +113,11 @@ void control::Controller::collisionChangeMode()
 
 void control::Controller::statusPrinter()
 {
- /*   qDebug()<<"Number of collisions"<<status::number_of_collisions;
-    qDebug()<<"Number of frames generated"<<status::number_of_frames_generated;
-    qDebug()<<"Number of successful transmission"<<status::number_of_frames_successfully_transmitted;
-    */
+
+    qDebug()<<"Number of collisions"<<status::collisions;
+    qDebug()<<"Number of frames generated"<<status::frameGenerated;
+    qDebug()<<"Number of successful transmission"<<status::frameSuccessTransmits;
+
 }
 
 /*control::Controller::Controller(QObject *parent)
