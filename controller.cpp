@@ -61,7 +61,6 @@ void control::Controller::executeOperations()
         Total_Cycles--;
     }
 
-//    qDebug()<<Total_Cycles;
     this->med.execute();
 
     QList<int> executeOrder;
@@ -74,9 +73,7 @@ void control::Controller::executeOperations()
             executeOrder.push_front(i);
 
     }
-//     this->addPinStrength();
-
-    for(int i=0;i<stations.size();i++)
+   for(int i=0;i<stations.size();i++)
       stations.operator [](executeOrder.operator [](i)).executeStation();
 
     this->addPinStrength();
@@ -119,6 +116,7 @@ void control::Controller::statusPrinter()
     qDebug()<<"Number of collisions"<<status::collisions;
     qDebug()<<"Number of frames generated"<<status::frameGenerated;
     qDebug()<<"Number of successful transmission"<<status::frameSuccessTransmits;
+    qDebug()<<"Number of Packets lost"<<status::packetsLost;
 
 }
 

@@ -35,6 +35,8 @@ class spBuffer;
 
 #define TIME_SLOT 5
 
+#define NUMBER_OF_ATTEMPTS 5
+
 namespace control
 {
 class Controller;
@@ -104,6 +106,7 @@ private:
     int inFrameRecPos;
     int waitPeriod;
     bool waitingForChannel;
+    int num_attempts;
 
 public:
     Stations(int id);
@@ -120,6 +123,8 @@ public:
     void processInFrame();
 
     void collisionChangeMode();
+
+    void switchPackets();
 
     void bufferCheck();
 

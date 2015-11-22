@@ -375,6 +375,8 @@ Stations::Stations(int id)
 
     this->inframe = NULL;
     this->waitingForChannel = false;
+    this->num_attempts = NUMBER_OF_ATTEMPTS;
+
 }
 
 void Stations::executeStation()
@@ -583,6 +585,15 @@ void Stations::collisionChangeMode()
         this->waitingForChannel = true;
         this->current_state = States::listening;
         this->setPinStrength(SignalPower::idle);
+
+        this->num_attempts--;
+
+        if(num_attempts==0)
+        {
+            switchPackets();
+        }
+
+
     }else
     {
     qDebug()<<"Collision Change Mode"<<id;
@@ -592,6 +603,11 @@ void Stations::collisionChangeMode()
     this->waitPeriod = 0;
     }
 
+}
+
+void Stations::switchPackets()
+{
+    this->outbuffer.getList().pop_front();
 }
 
 void Stations::bufferCheck()
