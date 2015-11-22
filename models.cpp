@@ -71,6 +71,7 @@ void ChannelMedium::execute()
         num_collision++;
         collisionInChannel = false;
         qDebug()<<"Collision Added"<<num_collision;
+        this->setStrength(CHANNEL_IDLE);
         status::addCollisions();
         this->controller->collisionChangeMode();
     }
@@ -382,42 +383,54 @@ void Stations::executeStation()
     {
 
         if(!checkChannel() && !isCollitionDetected())
-        {   // qDebug()<<"Strength detected is Listening by Station"<<id;
+        {
+            qDebug()<<"Strength detected is Listening by Station"<<id;
             this->receiveBitListening();
         }
         else if(isCollitionDetected())
         {
-          //  qDebug()<<"Collition detected"<<id;
+            qDebug()<<"Collition detected"<<id;
             next_state = States::listening;
         }
         else if(waitingForChannel)
         {
-            if(this->waitPeriod==0 )
+  //          qDebug()<<"Waiting Channel"<<id<<"Period"<<waitPeriod;
+            if(this->waitPeriod == 0 )
              {
+
                 if(checkChannel())
                  {  qDebug()<<"Changing to Sending"<<id;
                     next_state = States::sending;  }
             }
             else
               {
+  //              qDebug()<<"Waiting Period Reduced"<<id<<waitPeriod;
                 this->waitPeriod--;
+                next_state = States::listening;
 
                 }
         }else
         {
+          //  qDebug()<<"Buffer Check"<<id;
             this->bufferCheck();
         }
 
     }else if(current_state==States::sending)
     {
+  //      qDebug()<<"Sending bit"<<id;
         sendBit();
     }else if(current_state==States::receving)
     {
+        if(isCollitionDetected())
+        {
+             qDebug()<<"Collition detected"<<id;
+             next_state = States::listening;
+        }
+        else
+        {
         this->receiveBitReading();
+        }
     }
-
-
-
 
     prev_state = current_state;
     current_state = next_state;
@@ -561,10 +574,23 @@ void Stations::processInFrame()
 
 void Stations::collisionChangeMode()
 {
+
+   if(this->current_state == States::sending)
+    {
+        this->waitPeriod = TIME_SLOT*logics::generateRand(1,10,RAND_SEED_CONST);
+        ONE_NANO_SEC_WAIT;
+        qDebug()<<"Collision  if Change Mode"<<id<<waitPeriod;
+        this->waitingForChannel = true;
+        this->current_state = States::listening;
+        this->setPinStrength(SignalPower::idle);
+    }else
+    {
+    qDebug()<<"Collision Change Mode"<<id;
  this->current_state = States::listening;
     this->setPinStrength(SignalPower::idle);
     this->waitingForChannel = false;
     this->waitPeriod = 0;
+    }
 
 }
 
@@ -572,8 +598,9 @@ void Stations::bufferCheck()
 {
     if(outbuffer.framesInBuffer()>0)
     {
-        this->waitPeriod = TIME_SLOT*logics::generateRand(0,10,RAND_SEED_CONST);
-        ONE_NANO_SEC_WAIT;
+//        this->waitPeriod = TIME_SLOT*logics::generateRand(0,10,RAND_SEED_CONST);
+ //       ONE_NANO_SEC_WAIT;
+        this->waitPeriod = 2;
         this->waitingForChannel = true;
         qDebug()<<"Waiting change for "<<id;
     }

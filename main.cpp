@@ -42,8 +42,9 @@ int main(int argc, char *argv[])
 
     logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,1,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(1).getoutBuffer().getList());
 
-     logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,3,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(3).getoutBuffer().getList());
+//     logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,2,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(2).getoutBuffer().getList());
 
+     logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,2,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(2).getoutBuffer().getList());
 
 
     control->startTimer();

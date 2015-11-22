@@ -61,6 +61,7 @@ void control::Controller::executeOperations()
         Total_Cycles--;
     }
 
+//    qDebug()<<Total_Cycles;
     this->med.execute();
 
     QList<int> executeOrder;
@@ -73,6 +74,7 @@ void control::Controller::executeOperations()
             executeOrder.push_front(i);
 
     }
+//     this->addPinStrength();
 
     for(int i=0;i<stations.size();i++)
       stations.operator [](executeOrder.operator [](i)).executeStation();
