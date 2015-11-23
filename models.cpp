@@ -360,6 +360,16 @@ bool Stations::addFrame(Frame *frame)
 {
     return this->outbuffer.listAdd(*frame);
 }
+
+int Stations::getReTransmissionOverHead()
+{
+    return reTransmissionOverHead;
+}
+
+void Stations::setReTransmissionOverHead(int value)
+{
+    reTransmissionOverHead = value;
+}
 Stations::Stations(int id)
 {
     this->id = id;
@@ -369,6 +379,7 @@ Stations::Stations(int id)
     next_state = States::listening;
     prev_state = States::listening;
     this->frameSentPos = 0;
+    this->frames_generated = 0;
 
     //this->outframe = new Frame()
     this->frameSize = FRAME_SIZE;
@@ -376,7 +387,10 @@ Stations::Stations(int id)
     this->inframe = NULL;
     this->waitingForChannel = false;
     this->num_attempts = NUMBER_OF_ATTEMPTS;
-
+    this->buffer_overFlows = 0;
+    this->successfulReception = 0;
+    this->successfulTransmission = 0;
+    this->reTransmissionOverHead = 0;
 }
 
 void Stations::executeStation()
@@ -415,6 +429,7 @@ void Stations::executeStation()
         {
           //  qDebug()<<"Buffer Check"<<id;
             this->bufferCheck();
+            this->next_state = States::listening;
         }
 
     }else if(current_state==States::sending)
@@ -497,6 +512,7 @@ void Stations::sendBit()
         this->outbuffer.getList().pop_front();
 
         this->waitingForChannel = false;
+        this->successfulTransmission;
     }
 
    // prev_state = current_state;
@@ -564,6 +580,7 @@ void Stations::processInFrame()
 
     if(dest==this->id)
      {   qDebug()<<"I Station"<<id<<"Received frame from"<<source;
+        this->successfulReception++;
     //    status::addSuccessfulFrameTransmission();
         status::addFrameSuccessTransmits();
     }
@@ -591,6 +608,9 @@ void Stations::collisionChangeMode()
         if(num_attempts==0)
         {
             switchPackets();
+        }else
+        {
+            this->reTransmissionOverHead++;
         }
 
 
@@ -608,6 +628,13 @@ void Stations::collisionChangeMode()
 void Stations::switchPackets()
 {
     this->outbuffer.getList().pop_front();
+     qDebug()<<"Swtich Packets"<<outbuffer.framesInBuffer();
+
+    status::addPacketsLost();
+
+     if(outbuffer.framesInBuffer()<=0)
+         this->waitingForChannel = false;
+ //  this->waitingForChannel = false;
 }
 
 void Stations::bufferCheck()
@@ -620,4 +647,36 @@ void Stations::bufferCheck()
         this->waitingForChannel = true;
         qDebug()<<"Waiting change for "<<id;
     }
+}
+
+void Stations::addFrameRandomly(int numOfStations)
+{
+//    logics::generateRandFrames(1, FRAME_SOURCE_LENGTH, FRAME_DEST_LENGTH, FRAME_MESSAGE_LENGTH, this->outbuffer.getList());
+    if(this->getoutBuffer().framesInBuffer()<this->getoutBuffer().getBufferSize())
+   {     logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,this->id,FRAME_DEST_LENGTH,numOfStations
+                                          ,FRAME_MESSAGE_LENGTH,this->getoutBuffer().getList());
+        frames_generated++;
+    }
+    else
+        buffer_overFlows++;
+}
+
+int Stations::getBufferOverFlows()
+{
+    return this->buffer_overFlows;
+}
+
+int Stations::getFramesGenerated()
+{
+    return this->frames_generated;
+}
+
+int Stations::getSuccessfulReception()
+{
+    return this->successfulReception;
+}
+
+int Stations::getSuccessfulTransmission()
+{
+    return this->successfulTransmission;
 }

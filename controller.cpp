@@ -107,12 +107,15 @@ void control::Controller::generateFrames()
      if(frame>=0 && frame<stations.size())
      {
          if(getStationAt(frame).getoutBuffer().framesInBuffer() < getStationAt(frame).getoutBuffer().getBufferSize())
-      logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,frame,FRAME_DEST_LENGTH,stations.size()
+     {     logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,frame,FRAME_DEST_LENGTH,stations.size()
                                             ,FRAME_MESSAGE_LENGTH,this->getStationAt(frame).getoutBuffer().getList());
+         }
          else
              status::addBufferOverFlow();
 
-      qDebug()<<"Frame generated for "<<frame;
+         stations.operator [](frame).addFrameRandomly(stations.size());
+
+    //  qDebug()<<"Frame generated for "<<frame;
      }
     }
 
@@ -147,6 +150,24 @@ void control::Controller::statusPrinter()
     qDebug()<<"Number of successful transmission"<<status::frameSuccessTransmits;
     qDebug()<<"Number of Packets lost"<<status::packetsLost;
     qDebug()<<"Buffer OverFlows"<<status::bufferOverFlow;
+
+    int successfulTransmission = 0;
+    for(int i=0;i<stations.size();i++)
+    {
+        qDebug()<<"Frames in "<<i<<" Buffer"<<stations.operator [](i).getoutBuffer().framesInBuffer();
+        qDebug()<<"Frames Generated"<<i<<stations.operator [](i).getFramesGenerated();
+        qDebug()<<"Buffer OverFlows"<<i<<stations.operator [](i).getBufferOverFlows();
+
+        qDebug()<<"Retransmission ratio"<<i<<
+                  (double)(stations.operator [](i).getReTransmissionOverHead())/
+                (double)(stations.operator [](i).getSuccessfulTransmission());
+
+        successfulTransmission += stations.operator [](i).getSuccessfulTransmission();
+    }
+
+    qDebug()<<"Successful Transmission"<<successfulTransmission;
+    qDebug()<<"Throughput"<<successfulTransmission/TIME_SLOT;
+
 
 }
 

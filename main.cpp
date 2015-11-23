@@ -38,13 +38,13 @@ int main(int argc, char *argv[])
     control->addStations(5);
 
 
-    logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,0,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(0).getoutBuffer().getList());
+//    logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,0,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(0).getoutBuffer().getList());
 
-    logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,1,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(1).getoutBuffer().getList());
+//    logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,1,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(1).getoutBuffer().getList());
 
 //     logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,2,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(2).getoutBuffer().getList());
 
-     logics::generateRandFramesForAStation(3,FRAME_SOURCE_LENGTH,2,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(2).getoutBuffer().getList());
+//     logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,2,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(2).getoutBuffer().getList());
 
 
     control->startTimer();

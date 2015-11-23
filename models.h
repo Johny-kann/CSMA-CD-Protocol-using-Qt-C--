@@ -19,7 +19,7 @@ enum States {listening, sending, receving};
 class Frame;
 class spBuffer;
 
-#define CLOCK_TIME 20
+#define CLOCK_TIME 10
 #define CHANNEL_POS 2
 #define CHANNEL_NEG -2
 #define CHANNEL_IDLE 0
@@ -29,13 +29,13 @@ class spBuffer;
 #define FRAME_DEST_LENGTH 8
 #define FRAME_MESSAGE_LENGTH 8
 
-#define TOTAL_TIME 500
+#define TOTAL_TIME 400
 
 #define BUF_SIZE 10
 
-#define TIME_SLOT 5
+#define TIME_SLOT 10
 
-#define NUMBER_OF_ATTEMPTS 1
+#define NUMBER_OF_ATTEMPTS 10
 
 namespace control
 {
@@ -102,11 +102,12 @@ private:
     int id;
     SignalPower pinStrength;
     States current_state,next_state,prev_state;
-    int frameSentPos,frameSize;
+    int frameSentPos, frameSize, frames_generated, buffer_overFlows;
     int inFrameRecPos;
     int waitPeriod;
     bool waitingForChannel;
     int num_attempts;
+    int successfulReception, successfulTransmission, reTransmissionOverHead;
 
 public:
     Stations(int id);
@@ -128,6 +129,16 @@ public:
 
     void bufferCheck();
 
+    void addFrameRandomly(int numOfStations);
+
+    int getBufferOverFlows();
+
+    int getFramesGenerated();
+
+    int getSuccessfulReception();
+
+    int getSuccessfulTransmission();
+
     SignalPower getPinStrength() const;
     void setPinStrength(const SignalPower &value);
     spBuffer &getoutBuffer();
@@ -138,6 +149,8 @@ public:
     void setNext_state(const States &value);
 
     bool addFrame(Frame *frame);
+    int getReTransmissionOverHead();
+    void setReTransmissionOverHead(int value);
 };
 
 
