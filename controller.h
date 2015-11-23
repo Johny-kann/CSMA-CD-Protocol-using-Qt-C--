@@ -35,6 +35,8 @@ public:
     void executeOperations();
 
     void addStations(int num);
+    void generateFrames();
+
     Stations &getStationAt(int num);
 
     void addPinStrength();

@@ -4,6 +4,11 @@
 #include <QtCore>
 #include "logics.h"
 #include "status.h"
+#include <time.h>
+#include <QTime>
+#include <random>
+#include <chrono>
+#include <thread>
 
 void control::Controller::test()
 {
@@ -63,6 +68,9 @@ void control::Controller::executeOperations()
 
     this->med.execute();
 
+    if(Total_Cycles % TIME_SLOT == 0)
+        this->generateFrames();
+
     QList<int> executeOrder;
 
     for(int i=0;i<stations.size();i++)
@@ -87,6 +95,27 @@ void control::Controller::addStations(int num)
     station->attachChannel(&med);
     this->stations.append(*station);
     }
+}
+
+void control::Controller::generateFrames()
+{
+    for(int i=0;i<stations.size();i++)
+    {
+     int frame = logics::generateRand(0,60,RAND_SEED_CONST);
+     ONE_NANO_SEC_WAIT;
+
+     if(frame>=0 && frame<stations.size())
+     {
+         if(getStationAt(frame).getoutBuffer().framesInBuffer() < getStationAt(frame).getoutBuffer().getBufferSize())
+      logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,frame,FRAME_DEST_LENGTH,stations.size()
+                                            ,FRAME_MESSAGE_LENGTH,this->getStationAt(frame).getoutBuffer().getList());
+         else
+             status::addBufferOverFlow();
+
+      qDebug()<<"Frame generated for "<<frame;
+     }
+    }
+
 }
 
 Stations &control::Controller::getStationAt(int num)
@@ -117,6 +146,7 @@ void control::Controller::statusPrinter()
     qDebug()<<"Number of frames generated"<<status::frameGenerated;
     qDebug()<<"Number of successful transmission"<<status::frameSuccessTransmits;
     qDebug()<<"Number of Packets lost"<<status::packetsLost;
+    qDebug()<<"Buffer OverFlows"<<status::bufferOverFlow;
 
 }
 

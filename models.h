@@ -35,7 +35,7 @@ class spBuffer;
 
 #define TIME_SLOT 5
 
-#define NUMBER_OF_ATTEMPTS 5
+#define NUMBER_OF_ATTEMPTS 1
 
 namespace control
 {
