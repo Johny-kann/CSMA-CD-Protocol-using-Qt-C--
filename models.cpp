@@ -12,6 +12,27 @@
 #include <thread>
 #include "status.h"
 
+/*
+int CLOCK_TIME = 10;
+int CHANNEL_POS = 2;
+int CHANNEL_NEG = -2;
+int CHANNEL_IDLE = 0;
+
+int FRAME_SIZE = 24;
+int FRAME_SOURCE_LENGTH = 8;
+int FRAME_DEST_LENGTH = 8;
+int FRAME_MESSAGE_LENGTH = 8;
+
+
+int TOTAL_TIME = 400;
+
+int BUF_SIZE = 10;
+
+int TIME_SLOT = 10;
+
+int NUMBER_OF_ATTEMPTS = 10;
+
+*/
 
 int ChannelMedium::getNum_collision() const
 {
@@ -37,6 +58,7 @@ ChannelMedium::ChannelMedium()
     this->signalStrength = logics::convertSignalStrenthToShort(SignalPower::idle);
     this->num_collision = 0;
     this->collisionInChannel = 0;
+    this->idle = 0;
 }
 
 ChannelMedium::~ChannelMedium()
@@ -64,6 +86,11 @@ void ChannelMedium::setCollision()
     collisionInChannel = true;
 }
 
+void ChannelMedium::addIdle()
+{
+    this->idle++;
+}
+
 void ChannelMedium::execute()
 {
     if(collisionInChannel)
@@ -74,7 +101,15 @@ void ChannelMedium::execute()
         this->setStrength(CHANNEL_IDLE);
         status::addCollisions();
         this->controller->collisionChangeMode();
+    }else if(this->getStrenth()==CHANNEL_IDLE)
+    {
+        this->addIdle();
     }
+}
+
+int ChannelMedium::getIdle() const
+{
+    return this->idle;
 }
 
 
@@ -236,6 +271,7 @@ Frame::Frame(Bit *bits, short sour_len, short dest_len, short mess_len)
     this->setSource_length(sour_len);
     this->setDestination_length(dest_len);
     this->setMessage_length(mess_len);
+    this->delay = 0;
 }
 
 Frame::~Frame()
@@ -244,6 +280,16 @@ Frame::~Frame()
     {
        delete[] this->bits;
     }
+}
+
+void Frame::addDelay()
+{
+    this->delay++;
+}
+
+int Frame::getDelay()
+{
+    return this->delay;
 }
 
 int Frame::getTotalLength()
@@ -279,6 +325,16 @@ bool spBuffer::listAdd(Frame &frame)
         return false;
 }
 
+void spBuffer::execute()
+{
+
+    for(int i=0;i<list.size();i++)
+    {
+        list[i].addDelay();
+    }
+
+}
+
 QList<Frame> &spBuffer::getList()
 {
     return list;
@@ -291,7 +347,7 @@ QList<Frame> spBuffer::getList() const
 
 Frame &spBuffer::frameAt(int i)
 {
-    return list.operator [](i);
+    return list[i];
 }
 
 void spBuffer::setList(const QList<Frame> &value)
@@ -395,6 +451,8 @@ Stations::Stations(int id)
 
 void Stations::executeStation()
 {
+    this->outbuffer.execute();
+
     if(current_state==States::listening)
     {
 
@@ -508,15 +566,14 @@ void Stations::sendBit()
         next_state = States::listening;
         qDebug()<<"Station Changing to Listening mode"<<this->id;
         this->setPinStrength(SignalPower::idle);
+
+        status::addDelayForSuccessfulFrame(outbuffer.getList()[0].getDelay());
         if(!outbuffer.getList().isEmpty())
         this->outbuffer.getList().pop_front();
 
         this->waitingForChannel = false;
-        this->successfulTransmission;
+        this->successfulTransmission++;
     }
-
-   // prev_state = current_state;
-
 }
 
 void Stations::receiveBitListening()
@@ -611,6 +668,7 @@ void Stations::collisionChangeMode()
         }else
         {
             this->reTransmissionOverHead++;
+            status::addReTransmission();
         }
 
 

@@ -21,7 +21,7 @@ control::Controller::Controller(QObject *parent)
     connect(mainTimer,SIGNAL(timeout()),this,SLOT(update()));
     this->num_collisions = 0;
     this->med.setController(this);
-    this->Total_Cycles = 500;
+    this->Total_Cycles = TOTAL_TIME;
 
     //  qDebug()<<"Constructor";
 }
@@ -82,7 +82,7 @@ void control::Controller::executeOperations()
 
     }
    for(int i=0;i<stations.size();i++)
-      stations.operator [](executeOrder.operator [](i)).executeStation();
+      stations[(executeOrder[i])].executeStation();
 
     this->addPinStrength();
 }
@@ -101,7 +101,7 @@ void control::Controller::generateFrames()
 {
     for(int i=0;i<stations.size();i++)
     {
-     int frame = logics::generateRand(0,60,RAND_SEED_CONST);
+     int frame = logics::generateRand(0,TIME_SLOT*60,RAND_SEED_CONST);
      ONE_NANO_SEC_WAIT;
 
      if(frame>=0 && frame<stations.size())
@@ -113,7 +113,7 @@ void control::Controller::generateFrames()
          else
              status::addBufferOverFlow();
 
-         stations.operator [](frame).addFrameRandomly(stations.size());
+         stations[(frame)].addFrameRandomly(stations.size());
 
     //  qDebug()<<"Frame generated for "<<frame;
      }
@@ -123,7 +123,7 @@ void control::Controller::generateFrames()
 
 Stations &control::Controller::getStationAt(int num)
 {
-    return this->stations.operator [](num);
+    return this->stations[num];
 }
 
 void control::Controller::addPinStrength()
@@ -138,7 +138,7 @@ void control::Controller::addPinStrength()
 void control::Controller::collisionChangeMode()
 {
     for(int i=0;i<stations.size();i++)
-        stations.operator [](i).collisionChangeMode();
+        stations[i].collisionChangeMode();
 
 }
 
@@ -146,7 +146,7 @@ void control::Controller::statusPrinter()
 {
 
     qDebug()<<"Number of collisions"<<status::collisions;
-    qDebug()<<"Number of frames generated"<<status::frameGenerated;
+
     qDebug()<<"Number of successful transmission"<<status::frameSuccessTransmits;
     qDebug()<<"Number of Packets lost"<<status::packetsLost;
     qDebug()<<"Buffer OverFlows"<<status::bufferOverFlow;
@@ -154,20 +154,57 @@ void control::Controller::statusPrinter()
     int successfulTransmission = 0;
     for(int i=0;i<stations.size();i++)
     {
-        qDebug()<<"Frames in "<<i<<" Buffer"<<stations.operator [](i).getoutBuffer().framesInBuffer();
-        qDebug()<<"Frames Generated"<<i<<stations.operator [](i).getFramesGenerated();
-        qDebug()<<"Buffer OverFlows"<<i<<stations.operator [](i).getBufferOverFlows();
+        qDebug()<<"Frames in "<<i<<" Buffer"<<stations[i].getoutBuffer().framesInBuffer();
+        qDebug()<<"Frames Generated"<<i<<stations[i].getFramesGenerated();
+        qDebug()<<"Buffer OverFlows"<<i<<stations[i].getBufferOverFlows();
 
         qDebug()<<"Retransmission ratio"<<i<<
-                  (double)(stations.operator [](i).getReTransmissionOverHead())/
-                (double)(stations.operator [](i).getSuccessfulTransmission());
+                  (double)(stations[i].getReTransmissionOverHead())/
+                (double)(stations[i].getSuccessfulTransmission());
 
-        successfulTransmission += stations.operator [](i).getSuccessfulTransmission();
+        successfulTransmission += stations[i].getSuccessfulTransmission();
     }
+
 
     qDebug()<<"Successful Transmission"<<successfulTransmission;
     qDebug()<<"Throughput"<<successfulTransmission/TIME_SLOT;
 
+    qDebug()<<"...........status............";
+
+
+    qDebug()<<"Simulation Time in terms of Time Slot"<<(double)TOTAL_TIME/TIME_SLOT;
+
+    for(int i=0;i<stations.size();i++)
+    {
+        qDebug()<<"Frames Generated in Station"<<i<<stations[i].getFramesGenerated();
+    }
+     qDebug()<<"Total Number of frames generated"<<status::frameGenerated;
+
+     for(int i=0;i<stations.size();i++)
+     {
+         qDebug()<<"Frames Generated per Time Slot in Station"<<i<<(double)stations[i].getFramesGenerated()/(TOTAL_TIME/TIME_SLOT);
+     }
+    qDebug()<<"Average Number of Frames over entire network"<<(double)status::frameGenerated/(TOTAL_TIME/TIME_SLOT);
+    qDebug()<<"Total number of Buffer OverFlows"<<status::bufferOverFlow;
+    qDebug()<<"Max re-transmission count Reached"<<status::reTransmissionOverHead;
+
+    for(int i=0;i<stations.size();i++)
+    {
+        qDebug()<<"Frames Waiting in Buffer of station"<<i<<stations[i].getoutBuffer().framesInBuffer();
+    }
+
+    qDebug()<<"Number of Successful Transmissions"<<status::frameSuccessTransmits;
+    qDebug()<<"Throughput over entire network"<<(double)status::frameSuccessTransmits/(TOTAL_TIME/TIME_SLOT);
+
+    qDebug()<<"Channel Utilization"<<(double)(status::frameSuccessTransmits*ceil((double)FRAME_SIZE/TIME_SLOT))/(TOTAL_TIME/TIME_SLOT);
+
+    qDebug()<<"Channel Waste Collision"<<(double)status::collisions/(TOTAL_TIME/TIME_SLOT)
+           <<"Idle"<<ceil((double)this->med.getIdle()/TIME_SLOT)/(TOTAL_TIME/TIME_SLOT);
+
+    qDebug()<<"Retransmission overHead"<<(double)status::reTransmissionOverHead/status::frameSuccessTransmits;
+
+    qDebug()<<"Delay for Successful Transmission"<<(double)status::delayForSuccessfulFrame/status::frameSuccessTransmits
+           <<"In Time Slots"<<((double)status::delayForSuccessfulFrame/TIME_SLOT)/status::frameSuccessTransmits;
 
 }
 

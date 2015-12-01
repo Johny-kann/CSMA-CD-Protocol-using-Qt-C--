@@ -18,12 +18,14 @@ SOURCES += main.cpp\
     controller.cpp \
     testers.cpp \
     logics.cpp \
-    status.cpp
+    status.cpp \
+    charts.cpp
 
 HEADERS  += mainwindow.h \
     models.h \
     controller.h \
     logics.h \
-    status.h
+    status.h \
+    charts.h
 
 FORMS    += mainwindow.ui

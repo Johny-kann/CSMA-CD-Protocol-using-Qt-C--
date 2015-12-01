@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+
 //    QCoreApplication a(argc,argv);
     control::Controller *control = new control::Controller();
     w.attachController(control);

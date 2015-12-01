@@ -19,7 +19,7 @@ enum States {listening, sending, receving};
 class Frame;
 class spBuffer;
 
-#define CLOCK_TIME 10
+/*#define CLOCK_TIME 10
 #define CHANNEL_POS 2
 #define CHANNEL_NEG -2
 #define CHANNEL_IDLE 0
@@ -29,6 +29,7 @@ class spBuffer;
 #define FRAME_DEST_LENGTH 8
 #define FRAME_MESSAGE_LENGTH 8
 
+
 #define TOTAL_TIME 400
 
 #define BUF_SIZE 10
@@ -36,6 +37,28 @@ class spBuffer;
 #define TIME_SLOT 10
 
 #define NUMBER_OF_ATTEMPTS 10
+
+*/
+
+static int CLOCK_TIME = 50;
+static int CHANNEL_POS = 2;
+static int CHANNEL_NEG = -2;
+static int CHANNEL_IDLE = 0;
+
+static int FRAME_SIZE = 24;
+static int FRAME_SOURCE_LENGTH = 8;
+static int FRAME_DEST_LENGTH = 8;
+static int FRAME_MESSAGE_LENGTH = 8;
+
+
+static int TOTAL_TIME = 800;
+
+static int BUF_SIZE = 10;
+
+static int TIME_SLOT = 5;
+
+static int NUMBER_OF_ATTEMPTS = 10;
+
 
 namespace control
 {
@@ -48,6 +71,7 @@ private:
     int num_collision;
     bool collisionInChannel;
     control::Controller *controller;
+    unsigned long int idle;
 
 public:
     ChannelMedium();
@@ -58,9 +82,11 @@ public:
 
     void setCollision();
 
+    void addIdle();
+
     void execute();
 
-
+    int getIdle() const;
     int getNum_collision() const;
     void setNum_collision(int value);
 
@@ -82,6 +108,8 @@ private:
 public:
     spBuffer();
 bool listAdd(Frame &frame);
+
+void execute();
 
 QList<Frame> &getList();
 QList<Frame> getList() const;
@@ -199,11 +227,14 @@ private:
     Bit *bits;
     short source_length,destination_length;
     int message_length;
+    int delay;
 
 public:
     Frame(Bit *bits, short sour_len, short dest_len, short mess_len);
     ~Frame();
 
+    void addDelay();
+    int getDelay();
     int getTotalLength();
     bool *getSourceBits();
     bool *getDestinationBits();
