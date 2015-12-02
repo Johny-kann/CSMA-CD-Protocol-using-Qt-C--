@@ -34,6 +34,10 @@ public:
     bool resetTimer();
     void executeOperations();
 
+    void gettingInput();
+
+    void displayingOutput();
+
     void addStations(int num);
     void generateFrames();
 
@@ -44,6 +48,9 @@ public:
     void collisionChangeMode();
 
     void statusPrinter();
+
+    long getTotal_Cycles() const;
+    void setTotal_Cycles(long value);
 
 public slots:
     void run();

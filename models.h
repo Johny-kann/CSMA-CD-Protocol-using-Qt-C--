@@ -50,6 +50,7 @@ static int FRAME_SOURCE_LENGTH = 8;
 static int FRAME_DEST_LENGTH = 8;
 static int FRAME_MESSAGE_LENGTH = 8;
 
+static int NO_OF_STATIONS = 6;
 
 static int TOTAL_TIME = 800;
 

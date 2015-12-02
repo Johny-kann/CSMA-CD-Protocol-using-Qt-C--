@@ -21,6 +21,9 @@ public:
     bool attachController(control::Controller *controller);
 
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

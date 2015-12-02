@@ -30,14 +30,19 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     MainWindow w;
-    w.show();
+
 
 
 //    QCoreApplication a(argc,argv);
     control::Controller *control = new control::Controller();
     w.attachController(control);
-    control->addStations(5);
 
+
+  //  control->addStations(NO_OF_STATIONS);
+
+//    control->gettingInput();
+
+     w.show();
 
 //    logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,0,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(0).getoutBuffer().getList());
 
@@ -48,12 +53,12 @@ int main(int argc, char *argv[])
 //     logics::generateRandFramesForAStation(1,FRAME_SOURCE_LENGTH,2,FRAME_DEST_LENGTH,5,FRAME_MESSAGE_LENGTH,control->getStationAt(2).getoutBuffer().getList());
 
 
-    control->startTimer();
+//    control->startTimer();
 
 
 
     return a.exec();
 
-   tester_run();
+//   tester_run();
     return 0;
 }
